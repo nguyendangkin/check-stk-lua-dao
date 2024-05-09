@@ -173,7 +173,7 @@ const userLogin = (req, res, next) => {
         if (err) {
             return res.json({
                 EC: -1,
-                EM: "Tài khoảng hoặc mật khẩu không đúng.",
+                EM: "Tài khoản hoặc mật khẩu không đúng.",
                 DT: null,
             });
         }
@@ -181,23 +181,22 @@ const userLogin = (req, res, next) => {
         if (!user) {
             return res.json({
                 EC: -1,
-                EM: "Tài khoảng hoặc mật khẩu không đúng.",
+                EM: "Tài khoản hoặc mật khẩu không đúng.",
                 DT: null,
             });
         }
 
-        req.logIn(user, async (err) => {
-            if (err) {
-                return res.json({
-                    EC: -1,
-                    EM: "Tài khoảng hoặc mật khẩu không đúng.",
-                    DT: null,
-                });
-            }
-
+        try {
+            // Get user roles
+            // Lấy vai trò người dùng
             const roles = await getRolesByEmail(user.email);
 
+            // Create access token
+            // Tạo access token
             const accessToken = createAccessToken(user, roles);
+
+            // Create refresh token
+            // Tạo refresh token
             const refreshToken = jwt.sign(
                 { id: user.id },
                 process.env.JWT_SECRET,
@@ -206,12 +205,17 @@ const userLogin = (req, res, next) => {
                 }
             );
 
+            // Set refresh token in cookie
+            // Đặt refresh token trong cookie
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                // secure: true, // Chỉ gửi cookie qua HTTPS
                 sameSite: "Strict",
+                // secure: true, // Uncomment if using HTTPS
+                // secure: true, // Bỏ chú thích nếu sử dụng HTTPS
             });
 
+            // Respond with access token and user details
+            // Phản hồi với access token và thông tin người dùng
             return res.json({
                 EC: 0,
                 EM: "Đăng nhập thành công.",
@@ -221,7 +225,15 @@ const userLogin = (req, res, next) => {
                     email: user.email,
                 },
             });
-        });
+        } catch (error) {
+            // Handle error during token creation or role retrieval
+            // Xử lý lỗi trong quá trình tạo token hoặc lấy vai trò
+            return res.json({
+                EC: -1,
+                EM: "Lỗi hệ thống trong quá trình đăng nhập.",
+                DT: null,
+            });
+        }
     })(req, res, next);
 };
 
@@ -229,26 +241,22 @@ const userLogin = (req, res, next) => {
 // Xử lý đăng xuất cho người dùng. Xóa cookies và thông tin phiên làm việc.
 const userLogout = (req, res) => {
     try {
-        req.logout((err) => {
-            if (err) {
-                console.error("Lỗi trong quá trình đăng xuất:", err);
-                return res.status(500).json({
-                    EC: -1,
-                    EM: "Đã xảy ra lỗi trong quá trình đăng xuất.",
-                    DT: null,
-                });
-            }
+        // Clear the refresh token cookie
+        // Xóa cookie refresh token
+        res.clearCookie("refreshToken");
 
-            res.clearCookie("refreshToken");
-
-            return res.json({
-                EC: 0,
-                EM: "Đăng xuất thành công.",
-                DT: null,
-            });
+        return res.json({
+            EC: 0,
+            EM: "Đăng xuất thành công.",
+            DT: null,
         });
     } catch (error) {
-        console.log(error);
+        console.error("Lỗi trong quá trình đăng xuất:", error);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Đã xảy ra lỗi trong quá trình đăng xuất.",
+            DT: null,
+        });
     }
 };
 
