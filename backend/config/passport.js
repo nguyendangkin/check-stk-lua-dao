@@ -8,10 +8,8 @@ import db from "./../models/index";
 passport.use(
     new LocalStrategy(
         {
-            usernameField: "email", // Chỉ định email là trường username
-            // Specify email as the username field
-            passwordField: "password", // Chỉ định password là trường mật khẩu
-            // Specify password as the password field
+            usernameField: "email",
+            passwordField: "password",
         },
         async (email, password, done) => {
             try {
@@ -25,8 +23,7 @@ passport.use(
                 // If user is not found
                 if (!user) {
                     return done(null, false, {
-                        errorCode: -1, // Mã lỗi không tìm thấy người dùng
-                        // User not found error code
+                        errorCode: -1,
                     });
                 }
 
@@ -34,8 +31,7 @@ passport.use(
                 // If user is not verified
                 if (!user.isVerified) {
                     return done(null, false, {
-                        errorCode: -3, // Mã lỗi người dùng chưa được xác minh
-                        // User not verified error code
+                        errorCode: -3,
                     });
                 }
 
@@ -47,8 +43,7 @@ passport.use(
                 // If password does not match
                 if (!isMatch) {
                     return done(null, false, {
-                        errorCode: -2, // Mã lỗi mật khẩu không chính xác
-                        // Incorrect password error code
+                        errorCode: -2,
                     });
                 }
 
@@ -56,8 +51,6 @@ passport.use(
                 // Successful authentication, return user
                 return done(null, user);
             } catch (error) {
-                // Xử lý lỗi
-                // Handle errors
                 return done(error);
             }
         }

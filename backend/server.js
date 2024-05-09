@@ -48,5 +48,4 @@ AppRoutes(app);
 // Run the app
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    // Example app listening on port ${port}
 });

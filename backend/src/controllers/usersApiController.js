@@ -9,16 +9,22 @@ import {
 // Lấy tất cả người dùng dựa trên từ khóa tìm kiếm, limit và offset cho phân trang.
 const getAllUsers = async (req, res) => {
     try {
+        // Extract search keyword, limit, and offset from query parameters
+        // Trích xuất từ khóa tìm kiếm, giới hạn và độ lệch từ các tham số truy vấn
         const searchKeyword = req.query.search || "";
         const limit = parseInt(req.query.limit) || 5;
         const offset = parseInt(req.query.offset) || 0;
 
+        // Fetch users using the provided parameters
+        // Lấy người dùng sử dụng các tham số đã cung cấp
         const users = await handleGetAllUsers(
             searchKeyword,
             parseInt(limit),
             parseInt(offset)
         );
 
+        // Respond with the users data if found
+        // Phản hồi với dữ liệu người dùng nếu tìm thấy
         if (users) {
             return res.json({
                 EC: users.EC,
@@ -47,8 +53,14 @@ const getAllUsers = async (req, res) => {
 // Thêm một danh sách tài khoản lừa đảo vào cơ sở dữ liệu.
 const postScammer = async (req, res) => {
     try {
+        // Extract list of accounts from the request body
+        // Trích xuất danh sách tài khoản từ request body
         const listAccount = req.body;
+
+        // Call function to process and save scammer information
+        // Gọi hàm để xử lý và lưu thông tin lừa đảo
         const data = await handlePostScammer(listAccount);
+
         if (data) {
             return res.json({
                 EC: data.EC,
@@ -60,11 +72,15 @@ const postScammer = async (req, res) => {
         console.log(error);
     }
 };
+
 // Bans a user account based on userId.
 // Cấm một tài khoản người dùng dựa trên userId.
 const bandAccount = async (req, res) => {
     try {
+        // Extract userId from the request body
+        // Trích xuất userId từ nội dung yêu cầu
         const userId = req.body.id;
+
         if (!userId) {
             return res.status(400).json({
                 EC: -1,
@@ -72,6 +88,8 @@ const bandAccount = async (req, res) => {
             });
         }
 
+        // Call function to ban the user account
+        // Gọi hàm để cấm tài khoản người dùng
         const result = await handleBanAccount(userId);
 
         return res.json({
@@ -91,6 +109,8 @@ const bandAccount = async (req, res) => {
 // Xóa một tài khoản người dùng dựa trên userId.
 const deleteAccount = async (req, res) => {
     try {
+        // Retrieves the userId from the request body.
+        // Lấy userId từ body của request.
         const userId = req.body.id;
         if (!userId) {
             return res
@@ -98,6 +118,8 @@ const deleteAccount = async (req, res) => {
                 .json({ EC: 1, EM: "Thiếu thông tin userId." });
         }
 
+        // Calls the handleDeleteAccount function to handle the actual account deletion.
+        // Gọi hàm handleDeleteAccount để xử lý việc xóa tài khoản thực tế.
         const result = await handleDeleteAccount(userId);
 
         return res.json({

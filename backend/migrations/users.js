@@ -43,6 +43,9 @@ module.exports = {
             },
         });
 
+        // Thêm chỉ mục unique vào cột email trong bảng Users
+        // Add a unique index to the email column in the Users table
+        // Tăng hiệu năng search
         await queryInterface.addIndex("Users", ["email"], {
             unique: true,
             name: "idx_users_email_unique",

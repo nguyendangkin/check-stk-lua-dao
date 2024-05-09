@@ -38,9 +38,16 @@ const createAccessToken = (user, roles) => {
 // Handles the code verification request during registration. Returns success if the code is valid, otherwise returns an error.
 // Xử lý yêu cầu xác thực mã khi đăng ký. Nếu mã hợp lệ, trả về thành công, ngược lại trả về lỗi.
 const veryCodeRegister = async (req, res) => {
+    // Extract code from the request body
+    // Trích xuất mã từ nội dung yêu cầu
     const { code } = req.body;
     try {
+        // Call the function to handle code verification
+        // Gọi hàm để xử lý xác minh mã
         const result = await handleVeryCodeRegister(code);
+
+        // If verification is successful, send a success response
+        // Nếu xác minh thành công, gửi phản hồi thành công
         if (result.success) {
             return res.json({
                 EM: "Xác nhận email thành công.",
@@ -70,13 +77,19 @@ const veryCodeRegister = async (req, res) => {
 // Sử dụng nodemailer để gửi mail và lưu mã vào cơ sở dữ liệu.
 const sendCodeEmail = async (req, res) => {
     try {
+        // Extract email from the request body
+        // Trích xuất email từ nội  request body
         const { email } = req.body;
 
+        // Regular expression to validate email format
+        // Biểu thức chính quy để xác thực định dạng email
         const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailRegex.test(email)) {
             return res.json({ EC: -2, EM: "Email không đúng định dạng." });
         }
 
+        // Check if email exists in the system
+        // Kiểm tra email có tồn tại trong hệ thống không
         const userExists = await handleExistsEmail(email);
         if (!userExists) {
             return res.json({
@@ -85,8 +98,12 @@ const sendCodeEmail = async (req, res) => {
             });
         }
 
+        // Generate a random verification code
+        // Tạo mã xác thực ngẫu nhiên
         const code = generateCode();
 
+        // Set up email transporter configuration
+        // Cấu hình gửi email
         const transporter = nodemailer.createTransport({
             service: "Gmail",
             auth: {
@@ -95,6 +112,8 @@ const sendCodeEmail = async (req, res) => {
             },
         });
 
+        // Define email options
+        // Định nghĩa các tùy chọn email
         const mailOptions = {
             from: `Check STK Lừa Đảo <${process.env.EMAIL_USER}>`,
             to: email,
@@ -102,7 +121,12 @@ const sendCodeEmail = async (req, res) => {
             html: createEmailTemplate(code),
         };
 
+        // Send the email
+        // Gửi email
         await transporter.sendMail(mailOptions);
+
+        // Save the verification code in the system
+        // Lưu mã xác thực trong hệ thống
         await handleSaveCodeVery(email, code);
 
         return res.json({ EC: 0, EM: "Mã đã được gửi thành công." });
@@ -118,6 +142,8 @@ const sendCodeEmail = async (req, res) => {
 // Nếu hợp lệ, tiến hành đăng ký người dùng.
 const userRegister = async (req, res) => {
     try {
+        // Define validation schema using Joi
+        // Định nghĩa lược đồ xác thực bằng Joi
         const schema = Joi.object({
             email: Joi.string().email().required(),
             fullName: Joi.string().min(1).required(),
@@ -125,6 +151,8 @@ const userRegister = async (req, res) => {
             confirmPassword: Joi.string().required(),
         });
 
+        // Validate the request body against the schema
+        // Xác thực nội dung yêu cầu theo lược đồ
         const { error } = schema.validate(req.body);
         if (error) {
             return res.json({
@@ -134,8 +162,12 @@ const userRegister = async (req, res) => {
             });
         }
 
+        // Destructure validated fields from request body
+        // Tách các trường đã xác thực từ request body
         const { email, fullName, password, confirmPassword } = req.body;
 
+        // Check if password and confirm password match
+        // Kiểm tra xem mật khẩu và xác nhận mật khẩu có khớp không
         if (password !== confirmPassword) {
             return res.json({
                 EM: "Mật khẩu và Xác nhận Mật khẩu không trùng khớp.",
@@ -144,11 +176,14 @@ const userRegister = async (req, res) => {
             });
         }
 
+        // Call function to handle user registration
+        // Gọi hàm để xử lý đăng ký người dùng
         const registrationResult = await handleRegisterUser(
             email,
             password,
             fullName
         );
+
         return res.json({
             EM: registrationResult.EM,
             EC: registrationResult.EC,
@@ -170,6 +205,8 @@ const userRegister = async (req, res) => {
 // Trả về token và thông tin người dùng nếu đăng nhập thành công.
 const userLogin = (req, res, next) => {
     passport.authenticate("local", async (err, user) => {
+        // Respond with error if authentication fails
+        // Phản hồi lỗi nếu xác thực thất bại
         if (err) {
             return res.json({
                 EC: -1,
@@ -178,6 +215,8 @@ const userLogin = (req, res, next) => {
             });
         }
 
+        // Respond with error if user is not found
+        // Phản hồi lỗi nếu không tìm thấy người dùng
         if (!user) {
             return res.json({
                 EC: -1,
@@ -210,8 +249,7 @@ const userLogin = (req, res, next) => {
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 sameSite: "Strict",
-                // secure: true, // Uncomment if using HTTPS
-                // secure: true, // Bỏ chú thích nếu sử dụng HTTPS
+                // secure: true, // Uncomment if using HTTPS // Bỏ chú thích nếu sử dụng HTTPS
             });
 
             // Respond with access token and user details
@@ -226,8 +264,6 @@ const userLogin = (req, res, next) => {
                 },
             });
         } catch (error) {
-            // Handle error during token creation or role retrieval
-            // Xử lý lỗi trong quá trình tạo token hoặc lấy vai trò
             return res.json({
                 EC: -1,
                 EM: "Lỗi hệ thống trong quá trình đăng nhập.",
@@ -266,24 +302,36 @@ const userLogout = (req, res) => {
 // Nếu hợp lệ, cập nhật mật khẩu mới vào cơ sở dữ liệu.
 const passRetri = async (req, res) => {
     try {
+        // Extract necessary fields from the request body
+        // Trích xuất các trường cần thiết từ request body
         const { email, code, newPassword, confirmPassword } = req.body;
 
+        // Regular expression to validate email format
+        // Biểu thức chính quy để xác thực định dạng email
         const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailRegex.test(email)) {
             return res.json({ EC: -2, EM: "Email không đúng định dạng." });
         }
 
+        // Check if the email exists in the system
+        // Kiểm tra xem email có tồn tại trong hệ thống không
         const user = await handleExistsEmail(email);
         if (!user) {
             return res.json({ EC: -1, EM: "Email không tồn tại." });
         }
 
+        // Retrieve stored verification code and its creation time
+        // Lấy mã xác thực đã lưu và thời gian tạo mã
         const storedCode = user.codeVery;
         const codeCreatedAt = user.codeCreatedAt;
 
+        // Calculate time difference between now and code creation time
+        // Tính toán sự khác biệt thời gian giữa bây giờ và thời gian tạo mã
         const currentTime = new Date();
         const timeDiff = (currentTime - new Date(codeCreatedAt)) / (60 * 1000);
 
+        // Validate the verification code and its expiry
+        // Xác thực mã xác thực và thời hạn của nó
         if (!storedCode || storedCode != code || timeDiff > 10) {
             await user.update({ codeVery: null, codeCreatedAt: null });
             return res.json({
@@ -292,10 +340,14 @@ const passRetri = async (req, res) => {
             });
         }
 
+        // Check if new password is provided
+        // Kiểm tra xem mật khẩu mới có được cung cấp không
         if (!newPassword) {
             return res.json({ EC: -4, EM: "Mật khẩu không được bỏ trống." });
         }
 
+        // Validate the length of the new password
+        // Xác thực độ dài của mật khẩu mới
         if (newPassword.length < 6) {
             return res.json({
                 EC: -3,
@@ -303,11 +355,18 @@ const passRetri = async (req, res) => {
             });
         }
 
+        // Check if new password matches confirm password
+        // Kiểm tra xem mật khẩu mới có khớp với mật khẩu xác nhận không
         if (newPassword !== confirmPassword) {
             return res.json({ EC: -4, EM: "Mật khẩu không trùng khớp." });
         }
 
+        // Hash the new password
+        // Băm mật khẩu mới
         const hash = await hashPass(newPassword);
+
+        // Update user's password and reset code information
+        // Cập nhật mật khẩu của người dùng và đặt lại thông tin mã
         await user.update({
             password: hash,
             codeVery: null,
