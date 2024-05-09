@@ -1,0 +1,86 @@
+.avatar-button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.avatar-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 10px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    color: #007bff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.page-link:hover {
+    background-color: #f0f0f0;
+    text-decoration: none;
+}
+
+.active .page-link {
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+}
+
+.break-me {
+    margin: 0 5px;
+}
+
+.dFlexXS {
+    display: block;
+}
+
+.accordionHeader {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scrollToTopBtn {
+    position: fixed; // Cố định nút trên màn hình
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    right: 35px; // Khoảng cách từ cạnh phải của màn hình
+    bottom: 206px; // Khoảng cách từ cạnh dưới của màn hình
+    z-index: 1000; // Đảm bảo nút nằm trên các thành phần khác
+    opacity: 0.9;
+    cursor: pointer; // Cho người dùng biết đây là một nút có thể nhấn
+}
+
+@media (min-width: 992px) {
+    .cardBodyFlex {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .cardText {
+        position: absolute;
+        left: 30%;
+    }
+}
+
+@media (min-width: 576px) {
+    .dFlexXS {
+        display: flex;
+    }
+}

@@ -1,0 +1,22 @@
+.avatar-button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.avatar-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.avatar-button:hover .avatar-image,
+.avatar-button:focus .avatar-image {
+    box-shadow: 0 0 0 2px rgba(7, 127, 255, 0.5);
+}
+
+:global {
+    .nav-dropdown .dropdown-toggle::after {
+        display: none;
+    }
+}

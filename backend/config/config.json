@@ -1,0 +1,30 @@
+{
+    "development": {
+        "username": "postgres",
+        "port": "5432",
+        "password": "12345",
+        "database": "chongluadaoreact",
+        "host": "localhost",
+        "dialect": "postgres"
+    },
+    "test": {
+        "username": "root",
+        "password": null,
+        "database": "database_test",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "define": {
+            "freezeTableName": true
+        }
+    },
+    "production": {
+        "username": "root",
+        "password": null,
+        "database": "database_production",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "define": {
+            "freezeTableName": true
+        }
+    }
+}
