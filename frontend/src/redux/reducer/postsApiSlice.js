@@ -16,12 +16,10 @@ const initialState = {
 export const counterSlice = createSlice({
     name: "usersApi",
     initialState,
-    reducers: {
-        setFilteredPosts(state) {
-            state.searchResults = [];
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
+        // Handle pending state for requestGetFilteredPosts
+        // Xử lý trạng thái pending cho requestGetFilteredPosts
         builder.addCase(requestGetFilteredPosts.pending, (state, action) => {
             state.loading = true;
         });
@@ -33,7 +31,9 @@ export const counterSlice = createSlice({
         builder.addCase(requestGetFilteredPosts.rejected, (state, action) => {
             state.loading = false;
         });
-        //
+
+        // Handle pending state for requestGetPost
+        // Xử lý trạng thái pending cho requestGetPost
         builder.addCase(requestGetPost.pending, (state, action) => {
             state.loading = true;
         });
@@ -44,7 +44,9 @@ export const counterSlice = createSlice({
         builder.addCase(requestGetPost.rejected, (state, action) => {
             state.loading = false;
         });
-        //
+
+        // Handle pending state for requestGetComment
+        // Xử lý trạng thái pending cho requestGetComment
         builder.addCase(requestGetComment.pending, (state, action) => {
             state.loading = true;
         });
@@ -63,5 +65,5 @@ export const counterSlice = createSlice({
     },
 });
 
-export const { setFilteredPosts } = counterSlice.actions;
+export const {} = counterSlice.actions;
 export default counterSlice.reducer;

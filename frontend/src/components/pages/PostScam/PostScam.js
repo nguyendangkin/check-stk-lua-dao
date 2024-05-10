@@ -16,6 +16,8 @@ import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import * as Yup from "yup";
 
+// Validation schema for account details
+// Schema xác thực cho chi tiết tài khoản
 const accountSchema = Yup.object().shape({
     accountNumber: Yup.string()
         .matches(/^\d+$/, "Số Tài Khoản chỉ chứa số")
@@ -38,6 +40,8 @@ const accountSchema = Yup.object().shape({
     advice: Yup.string().required("Lời khuyên là bắt buộc"),
 });
 
+// PostScam component for reporting scam accounts
+// Component PostScam để báo cáo các tài khoản lừa đảo
 const PostScam = () => {
     const accessToken = useSelector(
         (state) => state.user?.userAccount?.accessToken
@@ -51,7 +55,7 @@ const PostScam = () => {
         accountName: "",
         bankName: "",
         evidenceLink: "",
-        advice: "", // Thêm trường advice vào account
+        advice: "",
     });
 
     const dispatch = useDispatch();
@@ -59,14 +63,15 @@ const PostScam = () => {
     const [showModal, setShowModal] = useState(false);
     const [modalIndex, setModalIndex] = useState(null);
 
-    // Tạo bài toán ngẫu nhiên
+    // Generate a random math problem for verification
+    // Tạo bài toán ngẫu nhiên để xác minh
     const [num1, setNum1] = useState(0);
     const [num2, setNum2] = useState(0);
     const [userAnswer, setUserAnswer] = useState("");
 
     const createMathProblem = () => {
-        const n1 = Math.floor(Math.random() * 10); // Ngẫu nhiên từ 0-9
-        const n2 = Math.floor(Math.random() * 10); // Ngẫu nhiên từ 0-9
+        const n1 = Math.floor(Math.random() * 10);
+        const n2 = Math.floor(Math.random() * 10);
 
         setNum1(n1);
         setNum2(n2);
@@ -74,6 +79,8 @@ const PostScam = () => {
 
     useEffect(createMathProblem, []);
 
+    // Update new account details
+    // Cập nhật chi tiết tài khoản mới
     const updateNewAccount = async (field, value) => {
         setNewAccount({
             ...newAccount,
@@ -81,9 +88,11 @@ const PostScam = () => {
         });
     };
 
+    // Add a new account to the list
+    // Thêm tài khoản mới vào danh sách
     const addAccount = async () => {
         try {
-            // Trim và kiểm tra dữ liệu
+            // Trim and validate data
             const trimmedAccount = {
                 accountNumber: newAccount.accountNumber.trim(),
                 accountName: newAccount.accountName.trim(),
@@ -101,38 +110,44 @@ const PostScam = () => {
                 accountName: "",
                 bankName: "",
                 evidenceLink: "",
-                advice: "", // Reset advice khi thêm account mới
+                advice: "",
             });
         } catch (error) {
             toast.warning(error.message);
         }
     };
 
+    // Update an existing account in the list
+    // Cập nhật tài khoản hiện có trong danh sách
     const updateAccount = (index, field, value) => {
-        const updatedAccounts = accounts.slice(); // Create a copy of the accounts array
-        updatedAccounts[index][field] = value; // Update the specified field of the specified account
-        setAccounts(updatedAccounts); // Update the state with the new accounts list
+        const updatedAccounts = accounts.slice();
+        updatedAccounts[index][field] = value;
+        setAccounts(updatedAccounts);
     };
 
+    // Validate and save the account details
+    // Xác thực và lưu chi tiết tài khoản
     const validateAndSaveAccount = async (index) => {
         try {
             await accountSchema.validate(accounts[index]);
-            // Xác thực thành công, cập nhật account và toggle trạng thái chỉnh sửa
             const updatedAccounts = accounts.slice();
-            updatedAccounts[index].isEditing = false; // Chỉ toggle khi xác thực thành công
+            updatedAccounts[index].isEditing = false;
             setAccounts(updatedAccounts);
         } catch (error) {
-            // Nếu xác thực thất bại, hiển thị thông báo lỗi và không thay đổi trạng thái chỉnh sửa
             toast.error(error.message);
-            throw error; // Throw error to prevent toggleEdit from being called
+            throw error;
         }
     };
 
+    // Delete an account from the list
+    // Xóa một tài khoản khỏi danh sách
     const deleteAccount = (index) => {
         setModalIndex(index);
         setShowModal(true);
     };
 
+    // Confirm deletion of an account
+    // Xác nhận xóa tài khoản
     const confirmDelete = () => {
         const updatedAccounts = accounts.slice();
         updatedAccounts.splice(modalIndex, 1);
@@ -141,10 +156,11 @@ const PostScam = () => {
         setModalIndex(null);
     };
 
+    // Toggle the editing state of an account
+    // Chuyển đổi trạng thái chỉnh sửa của tài khoản
     const toggleEdit = (index) => {
         const updatedAccounts = accounts.map((account, idx) => {
             if (idx === index) {
-                // Chỉ toggle trạng thái isEditing và không thay đổi dữ liệu khác
                 return { ...account, isEditing: !account.isEditing };
             }
             return account;
@@ -152,8 +168,9 @@ const PostScam = () => {
         setAccounts(updatedAccounts);
     };
 
+    // Handle form submission
+    // Xử lý gửi form
     const handleSubmit = async () => {
-        // Kiểm tra xem có tài khoản nào đang trong trạng thái chỉnh sửa hay không
         const isEditing = accounts.some((account) => account.isEditing);
 
         if (isEditing) {
@@ -168,21 +185,17 @@ const PostScam = () => {
             return;
         }
 
-        // Kiểm tra bài toán toán học trước khi gửi
         if (parseInt(userAnswer) !== num1 + num2) {
             toast.error("Vui lòng giải đúng bài toán.");
             return;
         }
 
         try {
-            // Decode user ID from access token
             const decodedToken = jwtDecode(accessToken);
             const userId = decodedToken.id;
 
-            // Create payload including user ID
             const payload = { accounts, userId };
 
-            // Dispatch the request with the new payload
             dispatch(requestPostScam(payload))
                 .then((result) => {
                     if (result.payload.EC === 0) {
@@ -195,7 +208,6 @@ const PostScam = () => {
                     toast.error("Có lỗi xảy ra khi đăng bài.");
                 });
 
-            // Tạo lại bài toán mới
             createMathProblem();
             setUserAnswer("");
             setAccounts([]);

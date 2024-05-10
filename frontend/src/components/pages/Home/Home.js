@@ -14,8 +14,13 @@ import styles from "./Home.module.scss";
 
 const cx = classNames.bind(styles);
 
+// Home component for displaying and managing posts
+// Component Home để hiển thị và quản lý các bài đăng
 const Home = () => {
     const dispatch = useDispatch();
+
+    // Get search results and post details from Redux store
+    // Lấy kết quả tìm kiếm và chi tiết bài đăng từ Redux store
     const searchResults = useSelector((state) => state.posts?.searchResults);
     const totalPosts = useSelector((state) => state.posts.totalPosts);
     const postInfo = useSelector((state) => state.posts?.postInfo);
@@ -23,6 +28,9 @@ const Home = () => {
     const totalDepenPosts = useSelector(
         (state) => state.posts?.totalDepenPosts
     );
+
+    // State variables for managing UI and data
+    // Biến state để quản lý UI và dữ liệu
     const [searchKeyword, setSearchKeyword] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
     const [showScrollButton, setShowScrollButton] = useState(false);
@@ -31,6 +39,8 @@ const Home = () => {
     const lastDepenPostRef = useRef(null);
     const [accountNumber, setAccountNumber] = useState(null);
 
+    // Debounce the search keyword to reduce API calls
+    // Debounce từ khóa tìm kiếm để giảm số lần gọi API
     const debouncedSearchKeyword = useDebounce(searchKeyword, 500);
     const itemsPerPage = 5;
 

@@ -10,18 +10,31 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { requestLogout } from "../../../redux/requestApi/userAccountThunk";
 import { logOut } from "../../../redux/reducer/userAccountSlice";
 
+// Bind styles using classnames
+// Gắn kết các styles sử dụng classnames
 const cx = classNames.bind(styles);
 
+// MainHeader component for the application header
+// Component MainHeader cho header của ứng dụng
 function MainHeader() {
+    // Get user account details from Redux store
+    // Lấy thông tin tài khoản người dùng từ Redux store
     const userAccount = useSelector((state) => state.user?.userAccount);
+
     const distPatch = useDispatch();
 
+    // State to handle active status of dropdown
+    // State để xử lý trạng thái hoạt động của dropdown
     const [isActive, setIsActive] = useState(false);
 
+    // Handle click event to toggle active state
+    // Xử lý sự kiện click để chuyển đổi trạng thái hoạt động
     const handleOnClick = (e) => {
         setIsActive(!isActive);
     };
 
+    // Handle logout event
+    // Xử lý sự kiện đăng xuất
     const handleLogout = () => {
         distPatch(requestLogout());
         distPatch(logOut());

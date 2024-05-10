@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Col, Row, Container, Alert } from "react-bootstrap";
+import { Form, Button, Col, Row, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import * as Yup from "yup";
 import { requestLogin } from "../../../redux/requestApi/userAccountThunk";
+import * as Yup from "yup";
 
+// Login component for user authentication
+// Component Đăng nhập để xác thực người dùng
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -19,12 +21,15 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // Redirect to home if user is already logged in
+    // Chuyển hướng về trang chủ nếu người dùng đã đăng nhập
     useEffect(() => {
         if (accessToken) {
             navigate("/");
         }
     }, [accessToken, navigate]);
 
+    // Define validation schema using Yup
     // Định nghĩa schema kiểm tra xác thực bằng Yup
     const validationSchema = Yup.object().shape({
         email: Yup.string()
@@ -33,6 +38,8 @@ const Login = () => {
         password: Yup.string().required("Mật khẩu không được bỏ trống."),
     });
 
+    // Handle login process
+    // Xử lý quá trình đăng nhập
     const handleLogin = () => {
         const formValues = {
             email: email.trim(),
@@ -65,6 +72,8 @@ const Login = () => {
             });
     };
 
+    // Handle input changes and reset related errors
+    // Xử lý thay đổi đầu vào và đặt lại lỗi liên quan
     const handleInputChange = (field, value) => {
         switch (field) {
             case "email":
@@ -77,12 +86,15 @@ const Login = () => {
                 break;
         }
 
+        // Clear errors related to the specific field
         // Xóa lỗi liên quan đến trường cụ thể
         if (errors[field]) {
             setErrors((prev) => ({ ...prev, [field]: "" }));
         }
     };
 
+    // Handle Enter key press to submit form
+    // Xử lý sự kiện nhấn phím Enter để gửi form
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             handleLogin();

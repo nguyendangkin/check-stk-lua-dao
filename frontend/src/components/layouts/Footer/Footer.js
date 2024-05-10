@@ -1,8 +1,12 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
+// Footer component for the application
+// Component Footer cho ứng dụng
 const Footer = () => {
-    const startYear = 2022;
+    // Define start year and get current year
+    // Định nghĩa năm bắt đầu và lấy năm hiện tại
+    const startYear = 2024;
     const currentYear = new Date().getFullYear();
     return (
         <footer className="bg-body-tertiary" style={{ minHeight: "350px" }}>

@@ -6,7 +6,6 @@ import {
     requestDeleteUser,
     requestGetFilteredUsers,
 } from "../../../redux/requestApi/usersApiThunk";
-import { setFilteredUsers } from "../../../redux/reducer/usersApiSlice";
 import ReactPaginate from "react-paginate";
 import { useDebounce } from "../../../HooksCustomer/debounce";
 import className from "classnames/bind";
@@ -14,23 +13,42 @@ import styles from "./Admin.module.scss";
 
 const cx = className.bind(styles);
 
+// Admin component for user management
+// Component Admin để quản lý người dùng
 const Admin = () => {
     const dispatch = useDispatch();
-    const searchResults = useSelector((state) => state?.users?.searchResults); // Lấy kết quả tìm kiếm từ Redux store
-    const totalUsers = useSelector((state) => state?.users?.totalUsers); // Lấy tổng số người dùng từ Redux store
-    const [searchKeyword, setSearchKeyword] = useState(""); // Trạng thái từ khóa tìm kiếm
-    const [pageCount, setPageCount] = useState(0); // Số lượng trang
-    const [itemOffset, setItemOffset] = useState(0); // Vị trí của mục
-    const usersPerPage = 5; // Số người dùng mỗi trang
+    // Get search results and total users from Redux store
+    // Lấy kết quả tìm kiếm và tổng số người dùng từ Redux store
+    const searchResults = useSelector((state) => state?.users?.searchResults);
+    const totalUsers = useSelector((state) => state?.users?.totalUsers);
+
+    // State for search keyword
+    // State cho từ khóa tìm kiếm
+    const [searchKeyword, setSearchKeyword] = useState("");
+
+    // State for pagination control
+    // State để điều khiển phân trang
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+
+    // Number of users per page
+    // Số người dùng mỗi trang
+    const usersPerPage = 5;
     const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại
-    const [showModal, setShowModal] = useState(false); // Trạng thái hiển thị modal xóa
-    const [selectedUser, setSelectedUser] = useState(null); // Người dùng được chọn để xóa
-    const [showBanModal, setShowBanModal] = useState(false); // Trạng thái hiển thị modal ban
-    const [userToBan, setUserToBan] = useState(null); // Người dùng được chọn để ban
 
-    const debouncedKeyword = useDebounce(searchKeyword, 500); // Debounce từ khóa tìm kiếm
+    // State for modal controls
+    // State để điều khiển modal
+    const [showModal, setShowModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showBanModal, setShowBanModal] = useState(false);
+    const [userToBan, setUserToBan] = useState(null);
 
-    // Load danh sách người dùng khi từ khóa tìm kiếm hoặc vị trí trang thay đổi
+    // Debounce the search keyword to reduce API calls
+    // Debounce từ khóa tìm kiếm để giảm số lần gọi API
+    const debouncedKeyword = useDebounce(searchKeyword, 500);
+
+    // Load user list when search keyword or page offset changes
+    // Tải danh sách người dùng khi từ khóa tìm kiếm hoặc vị trí trang thay đổi
     useEffect(() => {
         dispatch(
             requestGetFilteredUsers({
@@ -41,28 +59,34 @@ const Admin = () => {
         );
     }, [debouncedKeyword, itemOffset, dispatch, usersPerPage]);
 
+    // Calculate page count based on total users
     // Tính toán số trang dựa trên tổng số người dùng
     useEffect(() => {
         setPageCount(Math.ceil(totalUsers / usersPerPage));
     }, [totalUsers, usersPerPage]);
 
-    // Xử lý khi người dùng chuyển trang
+    // Handle page click event for pagination
+    // Xử lý sự kiện click để phân trang
     const handlePageClick = (event) => {
         const newOffset = event.selected * usersPerPage;
         setItemOffset(newOffset);
         setCurrentPage(event.selected);
     };
 
+    // Handle delete account request
     // Xử lý yêu cầu xóa tài khoản
     const handleDelete = (userId) => {
         setShowModal(true);
         setSelectedUser(userId);
     };
 
+    // Confirm and perform account deletion
+    // Xác nhận và thực hiện xóa tài khoản
     const confirmDelete = () => {
         dispatch(requestDeleteUser({ id: selectedUser }))
             .then(() => {
-                // Gọi lại hàm tải dữ liệu người dùng sau khi xóa thành công
+                // Reload user list after successful deletion
+                // Tải lại danh sách người dùng sau khi xóa thành công
                 dispatch(
                     requestGetFilteredUsers({
                         searchKeyword: debouncedKeyword,
@@ -78,16 +102,20 @@ const Admin = () => {
         setSelectedUser(null);
     };
 
+    // Handle ban account request
     // Xử lý yêu cầu ban tài khoản
     const handleBanClick = (userId) => {
         setUserToBan(userId);
         setShowBanModal(true);
     };
 
+    // Confirm and perform account ban
+    // Xác nhận và thực hiện ban tài khoản
     const confirmBan = () => {
         dispatch(requestBanAccount({ id: userToBan }))
             .then(() => {
-                // Cập nhật lại danh sách người dùng hoặc thông báo người dùng đã bị ban
+                // Update user list or notify user has been banned
+                // Cập nhật danh sách người dùng hoặc thông báo người dùng đã bị ban
                 setShowBanModal(false);
                 setUserToBan(null);
             })

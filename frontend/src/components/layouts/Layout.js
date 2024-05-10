@@ -4,8 +4,12 @@ import MainHeader from "./MainHeader/MainHeader";
 import styles from "./LayoutStyles.module.scss";
 import Footer from "./Footer/Footer";
 
+// Bind styles using classnames
+// Gắn kết các styles sử dụng classnames
 const cx = classNames.bind(styles);
 
+// Layout component to structure the application layout
+// Component Layout để cấu trúc bố cục ứng dụng
 const Layout = ({ children }) => (
     <div className="app">
         <div className={cx("header")}>

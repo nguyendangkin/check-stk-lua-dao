@@ -17,8 +17,9 @@ import {
 } from "../../../redux/requestApi/userAccountThunk";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { authenticating } from "../../../redux/reducer/userAccountSlice";
 
+// Register component for user registration process
+// Component Đăng ký để xử lý quá trình đăng ký người dùng
 const Register = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -38,12 +39,15 @@ const Register = () => {
         (state) => state.user?.userAccount?.accessToken
     );
 
+    // Redirect to home if the user is already logged in
+    // Chuyển hướng về trang chủ nếu người dùng đã đăng nhập
     useEffect(() => {
         if (accessToken) {
             navigate("/");
         }
     }, [accessToken, navigate]);
 
+    // Define validation schema using Yup
     // Định nghĩa schema kiểm tra xác thực bằng Yup
     const validationSchema = Yup.object().shape({
         fullName: Yup.string()
@@ -60,6 +64,8 @@ const Register = () => {
             .oneOf([Yup.ref("password")], "Nhập lại mật khẩu mới không khớp."),
     });
 
+    // Handle register button click
+    // Xử lý khi nhấn nút đăng ký
     const handleRegisterClick = () => {
         const formValues = {
             fullName: fullName.trim(),
@@ -84,12 +90,13 @@ const Register = () => {
             return;
         }
 
+        // Dispatch register request
+        // Gửi yêu cầu đăng ký
         dispatch(requestRegister(formValues))
             .then((result) => {
                 if (result.payload.EC === 0) {
                     toast.success(result.payload.EM);
-                    dispatch(authenticating());
-                    setShowModal(true); // Hiển thị modal xác thực
+                    setShowModal(true);
                     setTimer(60);
                     setCanResend(false);
                 } else {
@@ -101,6 +108,8 @@ const Register = () => {
             });
     };
 
+    // Handle verification code submission
+    // Xử lý gửi mã xác thực
     const handleVerifyCodeSubmit = async (event) => {
         event.preventDefault();
         dispatch(requestVerifyCodeRegister({ code, email }))
@@ -118,6 +127,8 @@ const Register = () => {
             });
     };
 
+    // Handle resend verification code
+    // Xử lý gửi lại mã xác thực
     const handleResendCode = () => {
         setTimer(60);
         setCanResend(false);
@@ -136,6 +147,8 @@ const Register = () => {
             });
     };
 
+    // Timer for resend code button
+    // Hẹn giờ cho nút gửi lại mã
     useEffect(() => {
         let interval;
         if (timer > 0) {
@@ -149,6 +162,8 @@ const Register = () => {
         return () => clearInterval(interval);
     }, [timer]);
 
+    // Handle input field changes and clear related errors
+    // Xử lý thay đổi các trường nhập và xóa lỗi liên quan
     const handleInputChange = (field, value) => {
         switch (field) {
             case "fullName":
@@ -167,6 +182,7 @@ const Register = () => {
                 break;
         }
 
+        // Clear errors related to the specific field
         // Xóa lỗi liên quan đến trường cụ thể
         if (errors[field]) {
             setErrors((prev) => ({ ...prev, [field]: "" }));

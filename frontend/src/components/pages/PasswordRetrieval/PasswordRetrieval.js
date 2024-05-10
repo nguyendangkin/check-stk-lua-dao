@@ -8,7 +8,7 @@ import {
     Button,
     Alert,
 } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
     requestCodeEmail,
     requestPassRetri,
@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
+// PasswordRetrieval component for password recovery process
+// Component PasswordRetrieval để xử lý quá trình lấy lại mật khẩu
 const PasswordRetrieval = () => {
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
@@ -28,6 +30,8 @@ const PasswordRetrieval = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // Countdown for resend code button
+    // Đếm ngược cho nút gửi lại mã
     useEffect(() => {
         if (countdown > 0) {
             const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -36,6 +40,7 @@ const PasswordRetrieval = () => {
     }, [countdown]);
 
     // Schema validation for sending code
+    // Schema kiểm tra xác thực cho gửi mã
     const sendCodeSchema = Yup.object().shape({
         email: Yup.string()
             .email("Email không đúng định dạng.")
@@ -43,6 +48,7 @@ const PasswordRetrieval = () => {
     });
 
     // Schema validation for changing password
+    // Schema kiểm tra xác thực cho thay đổi mật khẩu
     const changePasswordSchema = Yup.object().shape({
         email: Yup.string()
             .email("Email không đúng định dạng.")
@@ -61,6 +67,8 @@ const PasswordRetrieval = () => {
             ),
     });
 
+    // Handle sending verification code
+    // Xử lý gửi mã xác thực
     const handleSendCode = () => {
         const formValues = { email: email.trim() };
 
@@ -90,6 +98,8 @@ const PasswordRetrieval = () => {
         setCountdown(60);
     };
 
+    // Handle changing the password
+    // Xử lý thay đổi mật khẩu
     const handleChangePassword = () => {
         const formValues = {
             email: email.trim(),
@@ -130,6 +140,8 @@ const PasswordRetrieval = () => {
             });
     };
 
+    // Handle input changes and reset related errors
+    // Xử lý thay đổi đầu vào và đặt lại lỗi liên quan
     const handleInputChange = (field, value) => {
         switch (field) {
             case "email":

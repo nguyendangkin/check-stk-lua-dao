@@ -5,7 +5,6 @@ const initialState = {
     userAccount: null,
     loading: null,
     error: null,
-    isAuthenticating: false,
 };
 
 export const counterSlice = createSlice({
@@ -15,12 +14,10 @@ export const counterSlice = createSlice({
         logOut: (state) => {
             state.userAccount = null;
         },
-        authenticating: (state) => {
-            state.isAuthenticating = true;
-        },
     },
     extraReducers: (builder) => {
-        // register
+        // Handle registration
+        // Xử lý đăng ký
         builder.addCase(requestRegister.pending, (state, action) => {
             state.loading = true;
         });
@@ -31,7 +28,8 @@ export const counterSlice = createSlice({
             state.error = true;
         });
 
-        // login
+        // Handle login
+        // Xử lý đăng nhập
         builder.addCase(requestLogin.pending, (state, action) => {
             state.loading = true;
         });
@@ -45,5 +43,5 @@ export const counterSlice = createSlice({
     },
 });
 
-export const { logOut, authenticating } = counterSlice.actions;
+export const { logOut } = counterSlice.actions;
 export default counterSlice.reducer;

@@ -16,12 +16,10 @@ const initialState = {
 export const counterSlice = createSlice({
     name: "usersApi",
     initialState,
-    reducers: {
-        setFilteredUsers(state) {
-            state.searchResults = [];
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
+        // Handle post scam request
+        // Xử lý yêu cầu đăng bài lừa đảo
         builder.addCase(requestPostScam.pending, (state, action) => {
             state.loading = true;
         });
@@ -32,7 +30,8 @@ export const counterSlice = createSlice({
             state.loading = false;
         });
 
-        //
+        // Handle fetching filtered users
+        // Xử lý lấy người dùng đã lọc
         builder.addCase(requestGetFilteredUsers.pending, (state, action) => {
             state.loading = true;
         });
@@ -47,5 +46,5 @@ export const counterSlice = createSlice({
     },
 });
 
-export const { setFilteredUsers } = counterSlice.actions;
+export const {} = counterSlice.actions;
 export default counterSlice.reducer;

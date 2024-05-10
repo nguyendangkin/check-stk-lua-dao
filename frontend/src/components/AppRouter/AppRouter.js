@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "../layouts/Layout";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
@@ -13,10 +13,19 @@ import PasswordRetrieval from "../pages/PasswordRetrieval/PasswordRetrieval";
 import Admin from "../pages/Admin/Admin";
 import Ban from "../pages/Ban/Ban";
 
+// Main router component to handle application routing
+// Component router chính để xử lý routing ứng dụng
 const AppRouter = () => {
+    // Get current location
+    // Lấy vị trí hiện tại
     const location = useLocation();
+
+    // State for loading bar progress
+    // State cho tiến trình của thanh tải
     const [progress, setProgress] = useState(0);
 
+    // Use effect to set progress bar when the location changes
+    // Sử dụng useEffect để thiết lập thanh tiến trình khi location thay đổi
     useEffect(() => {
         setProgress(100);
 

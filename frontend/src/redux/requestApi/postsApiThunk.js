@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../configAxios/axios";
 
+// Async thunk to get filtered posts
+// Thunk bất đồng bộ để lấy bài viết đã lọc
 export const requestGetFilteredPosts = createAsyncThunk(
     "usersApiSlice/requestGetFilteredPosts",
     async ({ searchKeyword, limit, offset }) => {
@@ -11,6 +13,8 @@ export const requestGetFilteredPosts = createAsyncThunk(
     }
 );
 
+// Async thunk to get a single post by account number
+// Thunk bất đồng bộ để lấy một bài viết theo số tài khoản
 export const requestGetPost = createAsyncThunk(
     "usersApiSlice/requestGetPost",
     async (accountNumber) => {
@@ -19,6 +23,8 @@ export const requestGetPost = createAsyncThunk(
     }
 );
 
+// Async thunk to get comments for a post
+// Thunk bất đồng bộ để lấy bình luận cho một bài viết
 export const requestGetComment = createAsyncThunk(
     "usersApiSlice/requestGetComment",
     async ({ accountNumber, page = 1 }) => {
