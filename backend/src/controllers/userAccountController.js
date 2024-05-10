@@ -50,8 +50,8 @@ const veryCodeRegister = async (req, res) => {
         // Nếu xác minh thành công, gửi phản hồi thành công
         if (result.success) {
             return res.json({
-                EM: "Xác nhận email thành công.",
-                EC: 0,
+                EM: result.EM,
+                EC: result.EC,
                 DT: null,
             });
         } else {

@@ -44,7 +44,7 @@ const handleGetAllPosts = async (searchKeyword, limit, offset) => {
             totalPosts: totalPosts,
         };
     } catch (error) {
-        console.log(error);
+        console.error("Error in handleGetAllPosts:", error);
         return {
             EM: "Lỗi khi lấy dữ liệu bài viết.",
             EC: 1,
@@ -95,7 +95,11 @@ const handleGetPost = async (accountNumber) => {
         };
     } catch (error) {
         console.error("Error in handleGetPost:", error);
-        throw error;
+        return {
+            EM: "Lỗi khi lấy bài viết.",
+            EC: 1,
+            DT: null,
+        };
     }
 };
 
@@ -163,8 +167,12 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
             totalComments: totalDepenPosts,
         };
     } catch (error) {
-        console.error("Error in handleGetPost:", error);
-        throw error;
+        console.error("Error in handleGetComment:", error);
+        return {
+            EM: "Lỗi khi lấy bình luận.",
+            EC: 1,
+            DT: null,
+        };
     }
 };
 

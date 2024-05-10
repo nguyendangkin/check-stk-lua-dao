@@ -10,17 +10,13 @@ const getAllPosts = async (req, res) => {
     try {
         // Lấy từ khóa tìm kiếm, giới hạn và offset từ query parameters
         // Get search keyword, limit, and offset from query parameters
-        const searchKeyword = req.query.search || "";
+        const searchKeyword = req.query.search?.trim() || "";
         const limit = parseInt(req.query.limit) || 5;
         const offset = parseInt(req.query.offset) || 0;
 
         // Call the service function to get all posts with the specified parameters
         // Gọi service để lấy tất cả bài đăng với các tham số đã chỉ định
-        const posts = await handleGetAllPosts(
-            searchKeyword,
-            parseInt(limit),
-            parseInt(offset)
-        );
+        const posts = await handleGetAllPosts(searchKeyword, limit, offset);
 
         return res.json({
             EC: posts.EC,
@@ -31,7 +27,7 @@ const getAllPosts = async (req, res) => {
             totalPosts: posts.totalPosts,
         });
     } catch (error) {
-        console.log("Error fetching posts:", error);
+        console.error("Error in getAllPosts:", error);
         return res.status(500).json({
             EC: 1,
             EM: "Lỗi khi lấy dữ liệu.",
@@ -46,14 +42,16 @@ const getPost = async (req, res) => {
     try {
         // Lấy số tài khoản từ body của request
         // Get account number from request body
-        const accountNumber = req.body.accountNumber;
+        const accountNumber = req.body.accountNumber?.trim();
 
         // Gọi service để lấy bài đăng theo số tài khoản
         // Call the service function to get the post by account number
         const post = await handleGetPost(accountNumber);
 
         if (!post) {
-            return res.json({ EC: post.EC, EM: post.EM });
+            return res
+                .status(404)
+                .json({ EC: -1, EM: "Không tìm thấy bài viết." });
         }
 
         return res.json({ EC: post.EC, EM: post.EM, DT: post.DT });
@@ -61,7 +59,7 @@ const getPost = async (req, res) => {
         console.error("Error in getPost:", error);
         return res
             .status(500)
-            .json({ EC: 1, EM: "Error fetching post.", DT: [] });
+            .json({ EC: 1, EM: "Lỗi khi lấy dữ liệu bài viết.", DT: [] });
     }
 };
 
@@ -71,7 +69,7 @@ const getComment = async (req, res) => {
     try {
         // Lấy số tài khoản từ body của request
         // Get account number from request body
-        const accountNumber = req.body.accountNumber;
+        const accountNumber = req.body.accountNumber?.trim();
 
         // Lấy trang và giới hạn từ body của request hoặc đặt mặc định
         // Get page and limit from request body or set default values
@@ -83,7 +81,9 @@ const getComment = async (req, res) => {
         const comments = await handleGetComment(accountNumber, page, limit);
 
         if (!comments) {
-            return res.json({ EC: comments.EC, EM: comments.EM });
+            return res
+                .status(404)
+                .json({ EC: -1, EM: "Không tìm thấy bình luận." });
         }
 
         return res.json({
@@ -95,10 +95,10 @@ const getComment = async (req, res) => {
             totalComments: comments.totalComments,
         });
     } catch (error) {
-        console.error("Error in getPost:", error);
+        console.error("Error in getComment:", error);
         return res
             .status(500)
-            .json({ EC: 1, EM: "Error fetching post.", DT: [] });
+            .json({ EC: 1, EM: "Lỗi khi lấy dữ liệu bình luận.", DT: [] });
     }
 };
 
