@@ -55,15 +55,15 @@
 }
 
 .scrollToTopBtn {
-    position: fixed; // Cố định nút trên màn hình
-    width: 50px;
+    position: fixed;
+    width: 50px !important;
     height: 50px;
     border-radius: 50%;
-    right: 35px; // Khoảng cách từ cạnh phải của màn hình
-    bottom: 206px; // Khoảng cách từ cạnh dưới của màn hình
-    z-index: 1000; // Đảm bảo nút nằm trên các thành phần khác
+    right: 35px;
+    bottom: 206px;
+    z-index: 1000;
     opacity: 0.9;
-    cursor: pointer; // Cho người dùng biết đây là một nút có thể nhấn
+    cursor: pointer;
 }
 
 @media (min-width: 992px) {

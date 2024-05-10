@@ -11,6 +11,7 @@ import Accordion from "react-bootstrap/Accordion";
 import ReactPaginate from "react-paginate";
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
+import { resetDepenPosts } from "../../../redux/reducer/postsApiSlice";
 
 const cx = classNames.bind(styles);
 
@@ -42,6 +43,7 @@ const Home = () => {
     // Debounce the search keyword to reduce API calls
     // Debounce từ khóa tìm kiếm để giảm số lần gọi API
     const debouncedSearchKeyword = useDebounce(searchKeyword, 500);
+
     const itemsPerPage = 5;
 
     // Use Intersection Observer to watch the last element and load more data
@@ -121,6 +123,8 @@ const Home = () => {
     // Hàm để cập nhật số tài khoản và lấy dữ liệu
     const handleCheck = (number) => {
         setAccountNumber(number);
+        setDepenPostsPage(0); // Reset page for comments
+        dispatch(resetDepenPosts()); // Clear previous comments
         dispatch(requestGetPost({ accountNumber: number }));
         dispatch(requestGetComment({ accountNumber: number }));
         setTimeout(() => {
@@ -257,7 +261,10 @@ const Home = () => {
                                     >
                                         Đi xem bằng chứng
                                     </Button>
-                                    <p style={{ fontSize: "12px" }}>
+                                    <p
+                                        className={cx("accordionHeader")}
+                                        style={{ fontSize: "12px" }}
+                                    >
                                         {depenPost.evidenceLink}
                                     </p>
                                     <p>Lời khuyên:</p>
@@ -276,6 +283,9 @@ const Home = () => {
                                         </Accordion.Item>
                                     </Accordion>
                                 </Card.Body>
+                                <span style={{ fontSize: "14px" }}>
+                                    {index + 1}
+                                </span>
                             </Card>
                         ))}
                     </Card>

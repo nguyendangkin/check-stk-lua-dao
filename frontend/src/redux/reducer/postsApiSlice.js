@@ -1,3 +1,4 @@
+// src/redux/slices/postsSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import {
     requestGetComment,
@@ -8,19 +9,23 @@ import {
 const initialState = {
     searchResults: [],
     postInfo: null,
-    depenPosts: null,
+    depenPosts: [],
     totalPosts: 0,
     totalDepenPosts: 0,
+    loading: false,
 };
 
 export const counterSlice = createSlice({
     name: "usersApi",
     initialState,
-    reducers: {},
+    reducers: {
+        resetDepenPosts: (state) => {
+            state.depenPosts = [];
+            state.totalDepenPosts = 0;
+        },
+    },
     extraReducers: (builder) => {
-        // Handle pending state for requestGetFilteredPosts
-        // Xử lý trạng thái pending cho requestGetFilteredPosts
-        builder.addCase(requestGetFilteredPosts.pending, (state, action) => {
+        builder.addCase(requestGetFilteredPosts.pending, (state) => {
             state.loading = true;
         });
         builder.addCase(requestGetFilteredPosts.fulfilled, (state, action) => {
@@ -28,42 +33,34 @@ export const counterSlice = createSlice({
             state.searchResults = action.payload?.DT;
             state.totalPosts = action.payload?.totalPosts;
         });
-        builder.addCase(requestGetFilteredPosts.rejected, (state, action) => {
+        builder.addCase(requestGetFilteredPosts.rejected, (state) => {
             state.loading = false;
         });
 
-        // Handle pending state for requestGetPost
-        // Xử lý trạng thái pending cho requestGetPost
-        builder.addCase(requestGetPost.pending, (state, action) => {
+        builder.addCase(requestGetPost.pending, (state) => {
             state.loading = true;
         });
         builder.addCase(requestGetPost.fulfilled, (state, action) => {
             state.loading = false;
             state.postInfo = action.payload?.DT;
         });
-        builder.addCase(requestGetPost.rejected, (state, action) => {
+        builder.addCase(requestGetPost.rejected, (state) => {
             state.loading = false;
         });
 
-        // Handle pending state for requestGetComment
-        // Xử lý trạng thái pending cho requestGetComment
-        builder.addCase(requestGetComment.pending, (state, action) => {
+        builder.addCase(requestGetComment.pending, (state) => {
             state.loading = true;
         });
         builder.addCase(requestGetComment.fulfilled, (state, action) => {
             state.loading = false;
             state.totalDepenPosts = action.payload?.totalComments;
-            if (state.depenPosts) {
-                state.depenPosts = [...state.depenPosts, ...action.payload?.DT];
-            } else {
-                state.depenPosts = action.payload?.DT;
-            }
+            state.depenPosts = [...state.depenPosts, ...action.payload?.DT];
         });
-        builder.addCase(requestGetComment.rejected, (state, action) => {
+        builder.addCase(requestGetComment.rejected, (state) => {
             state.loading = false;
         });
     },
 });
 
-export const {} = counterSlice.actions;
+export const { resetDepenPosts } = counterSlice.actions;
 export default counterSlice.reducer;
