@@ -4,6 +4,7 @@ import {
     handleDeleteAccount,
     handleBanAccount,
 } from "./../services/usersApiService";
+import Joi from "joi";
 
 // Fetches all users based on search keyword, limit, and offset for pagination.
 // Lấy tất cả người dùng dựa trên từ khóa tìm kiếm, limit và offset cho phân trang.
@@ -51,13 +52,73 @@ const getAllUsers = async (req, res) => {
 
 // Adds a list of scammer accounts to the database.
 // Thêm một danh sách tài khoản lừa đảo vào cơ sở dữ liệu.
+// Định nghĩa schema cho account
+const accountSchema = Joi.object({
+    accountNumber: Joi.string()
+        .pattern(/^\d+$/, "numbers")
+        .required()
+        .messages({
+            "string.pattern.name": "Số Tài Khoản chỉ chứa số",
+            "string.empty": "Số Tài Khoản là bắt buộc",
+        }),
+    accountName: Joi.string()
+        .pattern(/^[a-zA-Z\s]+$/, "letters")
+        .required()
+        .messages({
+            "string.pattern.name":
+                "Tên Chủ Tài Khoản chỉ chứa chữ cái không dấu",
+            "string.empty": "Tên Chủ Tài Khoản là bắt buộc",
+        }),
+    bankName: Joi.string()
+        .pattern(/^[a-zA-Z\s]+$/, "letters")
+        .required()
+        .messages({
+            "string.pattern.name":
+                "Tên Hệ Thống Thanh Toán chỉ chứa chữ cái không dấu",
+            "string.empty": "Tên Hệ Thống Thanh Toán là bắt buộc",
+        }),
+    evidenceLink: Joi.string().uri().required().messages({
+        "string.uri": "Link minh chứng không hợp lệ",
+        "string.empty": "Link minh chứng là bắt buộc",
+    }),
+    advice: Joi.string().required().messages({
+        "string.empty": "Lời khuyên là bắt buộc",
+    }),
+});
+
+// Định nghĩa schema cho listAccount
+const listAccountSchema = Joi.object({
+    accounts: Joi.array().items(accountSchema).required().messages({
+        "array.base": "Danh sách tài khoản phải là một mảng",
+        "array.includes": "Mỗi tài khoản phải là một đối tượng hợp lệ",
+        "any.required": "Danh sách tài khoản là bắt buộc",
+    }),
+    userId: Joi.number().integer().required().messages({
+        "number.base": "User ID phải là số nguyên",
+        "any.required": "User ID là bắt buộc",
+    }),
+});
+
+// Adds a list of scammer accounts to the database.
+// Thêm một danh sách tài khoản lừa đảo vào cơ sở dữ liệu.
 const postScammer = async (req, res) => {
     try {
-        // Extract list of accounts from the request body
         // Trích xuất danh sách tài khoản từ request body
         const listAccount = req.body;
 
-        // Call function to process and save scammer information
+        // Valid danh sách tài khoản
+        const { error } = listAccountSchema.validate(listAccount, {
+            abortEarly: false,
+        });
+
+        if (error) {
+            return res.status(400).json({
+                EC: -1,
+                EM: "Validation Lỗi",
+                DT: error.details.map((err) => err.message),
+            });
+        }
+
         // Gọi hàm để xử lý và lưu thông tin lừa đảo
         const data = await handlePostScammer(listAccount);
 
@@ -70,9 +131,12 @@ const postScammer = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Server Lỗi",
+        });
     }
 };
-
 // Bans a user account based on userId.
 // Cấm một tài khoản người dùng dựa trên userId.
 const bandAccount = async (req, res) => {

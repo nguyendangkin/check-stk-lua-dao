@@ -305,17 +305,21 @@ const passRetri = async (req, res) => {
         // Extract necessary fields from the request body
         // Trích xuất các trường cần thiết từ request body
         const { email, code, newPassword, confirmPassword } = req.body;
+        const trimmedEmail = email.trim();
+        const trimmedCode = code.trim();
+        const trimmedNewPassword = newPassword.trim();
+        const trimmedConfirmPassword = confirmPassword.trim();
 
         // Regular expression to validate email format
         // Biểu thức chính quy để xác thực định dạng email
         const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(trimmedEmail)) {
             return res.json({ EC: -2, EM: "Email không đúng định dạng." });
         }
 
         // Check if the email exists in the system
         // Kiểm tra xem email có tồn tại trong hệ thống không
-        const user = await handleExistsEmail(email);
+        const user = await handleExistsEmail(trimmedEmail);
         if (!user) {
             return res.json({ EC: -1, EM: "Email không tồn tại." });
         }
@@ -332,7 +336,7 @@ const passRetri = async (req, res) => {
 
         // Validate the verification code and its expiry
         // Xác thực mã xác thực và thời hạn của nó
-        if (!storedCode || storedCode != code || timeDiff > 10) {
+        if (!storedCode || storedCode !== trimmedCode || timeDiff > 10) {
             await user.update({ codeVery: null, codeCreatedAt: null });
             return res.json({
                 EC: -1,
@@ -342,13 +346,13 @@ const passRetri = async (req, res) => {
 
         // Check if new password is provided
         // Kiểm tra xem mật khẩu mới có được cung cấp không
-        if (!newPassword) {
+        if (!trimmedNewPassword) {
             return res.json({ EC: -4, EM: "Mật khẩu không được bỏ trống." });
         }
 
         // Validate the length of the new password
         // Xác thực độ dài của mật khẩu mới
-        if (newPassword.length < 6) {
+        if (trimmedNewPassword.length < 6) {
             return res.json({
                 EC: -3,
                 EM: "Mật khẩu phải có ít nhất 6 ký tự.",
@@ -357,13 +361,13 @@ const passRetri = async (req, res) => {
 
         // Check if new password matches confirm password
         // Kiểm tra xem mật khẩu mới có khớp với mật khẩu xác nhận không
-        if (newPassword !== confirmPassword) {
+        if (trimmedNewPassword !== trimmedConfirmPassword) {
             return res.json({ EC: -4, EM: "Mật khẩu không trùng khớp." });
         }
 
         // Hash the new password
         // Băm mật khẩu mới
-        const hash = await hashPass(newPassword);
+        const hash = await hashPass(trimmedNewPassword);
 
         // Update user's password and reset code information
         // Cập nhật mật khẩu của người dùng và đặt lại thông tin mã

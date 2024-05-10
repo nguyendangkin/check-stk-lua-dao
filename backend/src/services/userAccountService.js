@@ -231,8 +231,6 @@ const handleVeryCodeRegister = async (code, email) => {
         const now = new Date();
         const tenMinutesAgo = new Date(now.getTime() - 10 * 60000);
 
-        console.log("check email", email);
-
         // Tìm người dùng dựa trên mã xác minh được cung cấp và các tiêu chí để xác minh thành công:
         // - Mã xác minh khớp (`codeVery`)
         // - Trạng thái chưa xác minh (`isVerified: false`)
