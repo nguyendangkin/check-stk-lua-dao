@@ -22,7 +22,7 @@ const handleGetAllUsers = async (searchKeyword, limit, offset) => {
             // Search users by email
             // Tìm kiếm người dùng bằng email
             where: searchKeyword && {
-                email: { [Sequelize.Op.like]: `%${searchKeyword}%` },
+                email: { [Sequelize.Op.iLike]: `%${searchKeyword}%` },
             },
             attributes: ["id", "email", "fullName", "groupId"],
 
@@ -36,7 +36,7 @@ const handleGetAllUsers = async (searchKeyword, limit, offset) => {
             // Count users by email
             // Đếm người dùng bằng email
             where: searchKeyword && {
-                email: { [Sequelize.Op.like]: `%${searchKeyword}%` },
+                email: { [Sequelize.Op.iLike]: `%${searchKeyword}%` },
             },
         });
 

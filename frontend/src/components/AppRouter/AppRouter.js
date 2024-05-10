@@ -12,7 +12,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import PasswordRetrieval from "../pages/PasswordRetrieval/PasswordRetrieval";
 import Admin from "../pages/Admin/Admin";
 import Ban from "../pages/Ban/Ban";
-import VerifyEmail from "../pages/VerifyEmail/VerifyEmail";
 
 const AppRouter = () => {
     const location = useLocation();
@@ -105,15 +104,6 @@ const AppRouter = () => {
                                 <Ban />
                             </Layout>
                         </ProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/xac-thuc-dang-ky"
-                    element={
-                        <Layout>
-                            <VerifyEmail />
-                        </Layout>
                     }
                 />
 

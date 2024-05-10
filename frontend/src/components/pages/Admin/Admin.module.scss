@@ -1,0 +1,17 @@
+@media (max-width: 992px) {
+    .header {
+        display: flex;
+        justify-content: center;
+    }
+
+    .body {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .action {
+        display: flex;
+        justify-content: center;
+    }
+}

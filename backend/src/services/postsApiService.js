@@ -118,7 +118,7 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
                     include: [
                         {
                             model: db.User,
-                            attributes: ["fullName"],
+                            attributes: ["fullName", "email"],
                         },
                     ],
                     limit: limit,
@@ -149,6 +149,7 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
             ? post.DepenPosts.map((depenPost) => ({
                   evidenceLink: depenPost.evidenceLink,
                   advice: depenPost.advice,
+                  email: depenPost.User.email,
                   userName: depenPost.User
                       ? depenPost.User.fullName
                       : "Không xác định",

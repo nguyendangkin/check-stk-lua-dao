@@ -40,11 +40,11 @@ const createAccessToken = (user, roles) => {
 const veryCodeRegister = async (req, res) => {
     // Extract code from the request body
     // Trích xuất mã từ nội dung yêu cầu
-    const { code } = req.body;
+    const { code, email } = req.body;
     try {
         // Call the function to handle code verification
         // Gọi hàm để xử lý xác minh mã
-        const result = await handleVeryCodeRegister(code);
+        const result = await handleVeryCodeRegister(code, email);
 
         // If verification is successful, send a success response
         // Nếu xác minh thành công, gửi phản hồi thành công
@@ -146,7 +146,7 @@ const userRegister = async (req, res) => {
         // Định nghĩa lược đồ xác thực bằng Joi
         const schema = Joi.object({
             email: Joi.string().email().required(),
-            fullName: Joi.string().min(1).required(),
+            fullName: Joi.string().min(1).max(23).required(),
             password: Joi.string().min(6).required(),
             confirmPassword: Joi.string().required(),
         });

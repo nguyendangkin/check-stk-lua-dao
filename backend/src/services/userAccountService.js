@@ -224,12 +224,14 @@ const handleExistsEmail = async (email) => {
 
 // Function to verify the registration code
 // Hàm xác minh mã đăng ký
-const handleVeryCodeRegister = async (code) => {
+const handleVeryCodeRegister = async (code, email) => {
     try {
         // Gets the current time and calculates 10 minutes ago.
         // Lấy thời gian hiện tại và tính toán 10 phút trước.
         const now = new Date();
         const tenMinutesAgo = new Date(now.getTime() - 10 * 60000);
+
+        console.log("check email", email);
 
         // Tìm người dùng dựa trên mã xác minh được cung cấp và các tiêu chí để xác minh thành công:
         // - Mã xác minh khớp (`codeVery`)
@@ -237,6 +239,7 @@ const handleVeryCodeRegister = async (code) => {
         // - Thời gian tạo mã trong vòng 10 phút gần đây (`codeCreatedAt: { [Op.gt]: tenMinutesAgo }`)
         const user = await db.User.findOne({
             where: {
+                email: email,
                 codeVery: code,
                 isVerified: false,
                 codeCreatedAt: { [Op.gt]: tenMinutesAgo },

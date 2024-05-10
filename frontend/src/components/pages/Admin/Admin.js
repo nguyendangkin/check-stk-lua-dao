@@ -9,48 +9,42 @@ import {
 import { setFilteredUsers } from "../../../redux/reducer/usersApiSlice";
 import ReactPaginate from "react-paginate";
 import { useDebounce } from "../../../HooksCustomer/debounce";
+import className from "classnames/bind";
+import styles from "./Admin.module.scss";
+
+const cx = className.bind(styles);
 
 const Admin = () => {
     const dispatch = useDispatch();
     const searchResults = useSelector((state) => state?.users?.searchResults); // Lấy kết quả tìm kiếm từ Redux store
     const totalUsers = useSelector((state) => state?.users?.totalUsers); // Lấy tổng số người dùng từ Redux store
-    const [searchKeyword, setSearchKeyword] = useState("");
-    const [pageCount, setPageCount] = useState(0);
-    const [itemOffset, setItemOffset] = useState(0);
+    const [searchKeyword, setSearchKeyword] = useState(""); // Trạng thái từ khóa tìm kiếm
+    const [pageCount, setPageCount] = useState(0); // Số lượng trang
+    const [itemOffset, setItemOffset] = useState(0); // Vị trí của mục
     const usersPerPage = 5; // Số người dùng mỗi trang
-    const [currentPage, setCurrentPage] = useState(0); // Trạng thái để theo dõi trang hiện tại
-    const [showModal, setShowModal] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [showBanModal, setShowBanModal] = useState(false);
-    const [userToBan, setUserToBan] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại
+    const [showModal, setShowModal] = useState(false); // Trạng thái hiển thị modal xóa
+    const [selectedUser, setSelectedUser] = useState(null); // Người dùng được chọn để xóa
+    const [showBanModal, setShowBanModal] = useState(false); // Trạng thái hiển thị modal ban
+    const [userToBan, setUserToBan] = useState(null); // Người dùng được chọn để ban
 
-    const debouncedKeyword = useDebounce(searchKeyword, 500);
+    const debouncedKeyword = useDebounce(searchKeyword, 500); // Debounce từ khóa tìm kiếm
 
-    // Xử lý tìm kiếm và phân trang người dùng
+    // Load danh sách người dùng khi từ khóa tìm kiếm hoặc vị trí trang thay đổi
     useEffect(() => {
-        if (debouncedKeyword.trim() !== "") {
-            dispatch(
-                requestGetFilteredUsers({
-                    searchKeyword: debouncedKeyword,
-                    limit: usersPerPage,
-                    offset: itemOffset,
-                })
-            );
-        } else {
-            dispatch(setFilteredUsers());
-        }
+        dispatch(
+            requestGetFilteredUsers({
+                searchKeyword: debouncedKeyword,
+                limit: usersPerPage,
+                offset: itemOffset,
+            })
+        );
     }, [debouncedKeyword, itemOffset, dispatch, usersPerPage]);
 
     // Tính toán số trang dựa trên tổng số người dùng
     useEffect(() => {
         setPageCount(Math.ceil(totalUsers / usersPerPage));
     }, [totalUsers, usersPerPage]);
-
-    // Cập nhật lại vị trí trang khi từ khóa tìm kiếm thay đổi
-    useEffect(() => {
-        setCurrentPage(0);
-        setItemOffset(0);
-    }, [debouncedKeyword]);
 
     // Xử lý khi người dùng chuyển trang
     const handlePageClick = (event) => {
@@ -59,6 +53,7 @@ const Admin = () => {
         setCurrentPage(event.selected);
     };
 
+    // Xử lý yêu cầu xóa tài khoản
     const handleDelete = (userId) => {
         setShowModal(true);
         setSelectedUser(userId);
@@ -83,7 +78,7 @@ const Admin = () => {
         setSelectedUser(null);
     };
 
-    // ban account
+    // Xử lý yêu cầu ban tài khoản
     const handleBanClick = (userId) => {
         setUserToBan(userId);
         setShowBanModal(true);
@@ -92,7 +87,7 @@ const Admin = () => {
     const confirmBan = () => {
         dispatch(requestBanAccount({ id: userToBan }))
             .then(() => {
-                // Optional: Update the user list or indicate a user has been banned
+                // Cập nhật lại danh sách người dùng hoặc thông báo người dùng đã bị ban
                 setShowBanModal(false);
                 setUserToBan(null);
             })
@@ -115,7 +110,7 @@ const Admin = () => {
             />
             <Table striped bordered hover>
                 <thead>
-                    <tr>
+                    <tr className={cx("header")}>
                         <th>ID</th>
                         <th>Email</th>
                         <th>Họ Tên</th>
@@ -124,7 +119,7 @@ const Admin = () => {
                 </thead>
                 <tbody>
                     {searchResults.map((user, index) => (
-                        <tr key={`user-${index}`}>
+                        <tr key={`user-${index}`} className={cx("body")}>
                             <td>
                                 {user.groupId === 3 ? (
                                     <del>{user.id}</del>
@@ -146,7 +141,7 @@ const Admin = () => {
                                     user.fullName
                                 )}
                             </td>
-                            <td>
+                            <td className={cx("action")}>
                                 <Button className="me-2 mt-1">
                                     Xem các bài post
                                 </Button>
@@ -170,29 +165,31 @@ const Admin = () => {
                     ))}
                 </tbody>
             </Table>
-            {pageCount > 0 && (
-                <ReactPaginate
-                    nextLabel="next >"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={pageCount}
-                    previousLabel="< previous"
-                    forcePage={currentPage} // Đặt currentPage khi đã đảm bảo pageCount > 0
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    containerClassName="pagination"
-                    activeClassName="active"
-                    renderOnZeroPageCount={null}
-                />
-            )}
+            <div className="d-flex justify-content-center">
+                {pageCount > 0 && (
+                    <ReactPaginate
+                        nextLabel=">"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={3}
+                        marginPagesDisplayed={2}
+                        pageCount={pageCount}
+                        previousLabel="<"
+                        forcePage={currentPage}
+                        pageClassName={cx("page-item")}
+                        pageLinkClassName={cx("page-link")}
+                        previousClassName={cx("page-item")}
+                        previousLinkClassName={cx("page-link")}
+                        nextClassName={cx("page-item")}
+                        nextLinkClassName={cx("page-link")}
+                        breakLabel="..."
+                        breakClassName={cx("page-item", "break")}
+                        breakLinkClassName={cx("page-link")}
+                        containerClassName={cx("pagination")}
+                        activeClassName={cx("active")}
+                        renderOnZeroPageCount={null}
+                    />
+                )}
+            </div>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Xác nhận xóa</Modal.Title>

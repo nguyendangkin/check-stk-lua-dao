@@ -237,7 +237,7 @@ const Home = () => {
                                         : null
                                 }
                             >
-                                <Card.Header>{depenPost.userName}</Card.Header>
+                                <Card.Header>{`${depenPost.userName} (${depenPost.email})`}</Card.Header>
                                 <Card.Body>
                                     <Button
                                         href={depenPost.evidenceLink}
