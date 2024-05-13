@@ -83,6 +83,28 @@ const AppRoutes = (app) => {
     // Route để lấy các bình luận của một bài đăng
     router.post("/get-comment", postsApiController.getComment);
 
+    //
+    router.post(
+        "/get-info-user",
+        authenticate,
+        authorize(["admin"]),
+        postsApiController.getInfoUser
+    );
+
+    router.post(
+        "/delete-post",
+        authenticate,
+        authorize(["admin"]),
+        postsApiController.deletePost
+    );
+
+    router.post(
+        "/delete-comment",
+        authenticate,
+        authorize(["admin"]),
+        postsApiController.deleteComment
+    );
+
     // Route to handle all unspecified routes with a 404 message
     // Route xử lý tất cả các tuyến đường không xác định với thông báo 404
     router.get("*", (req, res) => {

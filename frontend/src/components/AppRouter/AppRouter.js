@@ -12,6 +12,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import PasswordRetrieval from "../pages/PasswordRetrieval/PasswordRetrieval";
 import Admin from "../pages/Admin/Admin";
 import Ban from "../pages/Ban/Ban";
+import InfoUser from "../pages/InfoUser/InfoUser";
 
 // Main router component to handle application routing
 // Component router chính để xử lý routing ứng dụng
@@ -108,9 +109,18 @@ const AppRouter = () => {
                 <Route
                     path="/cam-tai-khoan"
                     element={
-                        <ProtectedRoute>
+                        <Layout>
+                            <Ban />
+                        </Layout>
+                    }
+                />
+
+                <Route
+                    path="/thong-tin-nguoi-dung"
+                    element={
+                        <ProtectedRoute allowedRoles={["admin"]}>
                             <Layout>
-                                <Ban />
+                                <InfoUser />
                             </Layout>
                         </ProtectedRoute>
                     }

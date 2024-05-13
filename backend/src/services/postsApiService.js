@@ -176,8 +176,94 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
     }
 };
 
+const handleGetInfoUser = async (id) => {
+    try {
+        const user = await db.User.findOne({
+            where: { id: id },
+            attributes: ["id", "email", "fullName"],
+            include: [
+                {
+                    model: db.Post,
+                    attributes: [
+                        "id",
+                        "accountNumber",
+                        "accountName",
+                        "bankName",
+                    ],
+                    include: [
+                        {
+                            model: db.DepenPost,
+                            attributes: [
+                                "id",
+                                "evidenceLink",
+                                "advice",
+                                "postId",
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        return {
+            EM: "Lấy thông tin người dùng thành công.",
+            EC: 0,
+            DT: user,
+        };
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+        return {
+            EM: "Lỗi khi lấy thông tin người dùng.",
+            EC: 1,
+            DT: null,
+        };
+    }
+};
+
+const handleDeletePost = async (idPost) => {
+    try {
+        await db.Post.destroy({
+            where: { id: idPost },
+        });
+        return {
+            EM: "Xóa bài viết thành công.",
+            EC: 0,
+            DT: null,
+        };
+    } catch (error) {
+        console.error("Error in handleDeletePost:", error);
+        return {
+            EM: "Lỗi khi xóa bài viết.",
+            EC: 1,
+            DT: null,
+        };
+    }
+};
+
+const handleDeleteComment = async (idComment) => {
+    try {
+        await db.DepenPost.destroy({
+            where: { id: idComment },
+        });
+        return {
+            EM: "Xóa bình luận thành công.",
+            EC: 0,
+            DT: null,
+        };
+    } catch (error) {
+        console.error("Error in handleDeleteComment:", error);
+        return {
+            EM: "Lỗi khi xóa bình luận.",
+            EC: 1,
+            DT: null,
+        };
+    }
+};
+
 module.exports = {
     handleGetAllPosts,
     handleGetPost,
     handleGetComment,
+    handleGetInfoUser,
+    handleDeletePost,
+    handleDeleteComment,
 };

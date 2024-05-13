@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
     requestGetComment,
     requestGetFilteredPosts,
+    requestGetInfoUser,
     requestGetPost,
 } from "../requestApi/postsApiThunk";
 
@@ -12,6 +13,7 @@ const initialState = {
     depenPosts: [],
     totalPosts: 0,
     totalDepenPosts: 0,
+    listInfoUser: null,
     loading: false,
 };
 
@@ -19,12 +21,14 @@ export const counterSlice = createSlice({
     name: "usersApi",
     initialState,
     reducers: {
+        // reset comment when click new check
         resetDepenPosts: (state) => {
             state.depenPosts = [];
             state.totalDepenPosts = 0;
         },
     },
     extraReducers: (builder) => {
+        // get all posts
         builder.addCase(requestGetFilteredPosts.pending, (state) => {
             state.loading = true;
         });
@@ -37,6 +41,7 @@ export const counterSlice = createSlice({
             state.loading = false;
         });
 
+        // get the post
         builder.addCase(requestGetPost.pending, (state) => {
             state.loading = true;
         });
@@ -48,6 +53,7 @@ export const counterSlice = createSlice({
             state.loading = false;
         });
 
+        // get comment for post
         builder.addCase(requestGetComment.pending, (state) => {
             state.loading = true;
         });
@@ -59,8 +65,20 @@ export const counterSlice = createSlice({
         builder.addCase(requestGetComment.rejected, (state) => {
             state.loading = false;
         });
+
+        // get info user and all comment
+        builder.addCase(requestGetInfoUser.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(requestGetInfoUser.fulfilled, (state, action) => {
+            state.loading = false;
+            state.listInfoUser = action.payload?.DT;
+        });
+        builder.addCase(requestGetInfoUser.rejected, (state) => {
+            state.loading = false;
+        });
     },
 });
 
-export const { resetDepenPosts } = counterSlice.actions;
+export const { resetDepenPosts, setIdUser } = counterSlice.actions;
 export default counterSlice.reducer;

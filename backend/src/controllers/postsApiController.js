@@ -2,6 +2,9 @@ import {
     handleGetAllPosts,
     handleGetPost,
     handleGetComment,
+    handleGetInfoUser,
+    handleDeletePost,
+    handleDeleteComment,
 } from "../services/postsApiService";
 
 // Controller for getting all posts based on search keywords, pagination limits, and offsets
@@ -102,8 +105,70 @@ const getComment = async (req, res) => {
     }
 };
 
+//
+const getInfoUser = async (req, res) => {
+    try {
+        const idUser = req.body.idUser;
+        const infoUser = await handleGetInfoUser(idUser);
+        if (infoUser) {
+            return res.json({
+                EC: infoUser.EC,
+                EM: infoUser.EM,
+                DT: infoUser.DT,
+            });
+        }
+    } catch (error) {
+        console.error("Error in getInfoUser controller:", error);
+        res.status(500).json({
+            error: "An error occurred while fetching user information.",
+        });
+    }
+};
+
+const deletePost = async (req, res) => {
+    try {
+        const idPost = req.body.idPost;
+        console.log("check idPost", idPost);
+        const result = await handleDeletePost(idPost);
+        if (result) {
+            return res.json({
+                EC: result.EC,
+                EM: result.EM,
+                DT: result.DT,
+            });
+        }
+    } catch (error) {
+        console.error("Error in deletePost controller:", error);
+        res.status(500).json({
+            error: "An error occurred while deleting the post.",
+        });
+    }
+};
+
+const deleteComment = async (req, res) => {
+    try {
+        const idComment = req.body.idComment;
+        const result = await handleDeleteComment(idComment);
+        if (result) {
+            return res.json({
+                EC: result.EC,
+                EM: result.EM,
+                DT: result.DT,
+            });
+        }
+    } catch (error) {
+        console.error("Error in deleteComment controller:", error);
+        res.status(500).json({
+            error: "An error occurred while deleting the comment.",
+        });
+    }
+};
+
 module.exports = {
     getAllPosts,
     getPost,
     getComment,
+    getInfoUser,
+    deletePost,
+    deleteComment,
 };

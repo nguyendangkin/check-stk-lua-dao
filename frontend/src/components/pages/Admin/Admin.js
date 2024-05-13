@@ -9,7 +9,10 @@ import {
 import ReactPaginate from "react-paginate";
 import { useDebounce } from "../../../HooksCustomer/debounce";
 import className from "classnames/bind";
+import { useNavigate } from "react-router-dom";
 import styles from "./Admin.module.scss";
+import { setIdUser } from "../../../redux/reducer/postsApiSlice";
+import { requestGetInfoUser } from "../../../redux/requestApi/postsApiThunk";
 
 const cx = className.bind(styles);
 
@@ -17,6 +20,7 @@ const cx = className.bind(styles);
 // Component Admin để quản lý người dùng
 const Admin = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     // Get search results and total users from Redux store
     // Lấy kết quả tìm kiếm và tổng số người dùng từ Redux store
     const searchResults = useSelector((state) => state?.users?.searchResults);
@@ -126,6 +130,14 @@ const Admin = () => {
             });
     };
 
+    const handleViewInfoUser = (idUser) => {
+        dispatch(requestGetInfoUser({ idUser: idUser }))
+            .then(() => {
+                navigate("/thong-tin-nguoi-dung");
+            })
+            .catch((error) => {});
+    };
+
     return (
         <div className="container">
             <h2 className="mt-4 mb-4">Quản lý người dùng</h2>
@@ -170,7 +182,10 @@ const Admin = () => {
                                 )}
                             </td>
                             <td className={cx("action")}>
-                                <Button className="me-2 mt-1">
+                                <Button
+                                    onClick={() => handleViewInfoUser(user.id)}
+                                    className="me-2 mt-1"
+                                >
                                     Xem các bài post
                                 </Button>
                                 <Button

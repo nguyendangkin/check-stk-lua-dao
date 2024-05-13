@@ -35,3 +35,27 @@ export const requestGetComment = createAsyncThunk(
         return response.data;
     }
 );
+//
+export const requestGetInfoUser = createAsyncThunk(
+    "usersApiSlice/requestGetInfoUser",
+    async (idUser) => {
+        const response = await axios.post(`/api/v1/get-info-user`, idUser);
+        return response.data;
+    }
+);
+
+export const requestDeletePost = createAsyncThunk(
+    "usersApiSlice/requestDeletePost",
+    async (idPost) => {
+        const response = await axios.post(`/api/v1/delete-post`, idPost);
+        return response.data;
+    }
+);
+
+export const requestDeleteComment = createAsyncThunk(
+    "usersApiSlice/requestDeleteComment",
+    async (idComment) => {
+        const response = await axios.post(`/api/v1/delete-comment`, idComment);
+        return response.data;
+    }
+);

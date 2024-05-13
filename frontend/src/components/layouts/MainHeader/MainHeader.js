@@ -56,7 +56,7 @@ function MainHeader() {
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link as={Link} to={"/thong-tin-chinh"}>
-                                Thông tin chính
+                                Hướng dẫn sử dụng
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
