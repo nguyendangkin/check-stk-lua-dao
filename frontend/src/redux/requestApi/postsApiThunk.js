@@ -59,3 +59,11 @@ export const requestDeleteComment = createAsyncThunk(
         return response.data;
     }
 );
+
+export const requestDeleteAllComment = createAsyncThunk(
+    "usersApiSlice/requestDeleteAllComment",
+    async (idPost) => {
+        const response = await axios.post(`/api/v1/delete-all-comment`, idPost);
+        return response.data;
+    }
+);

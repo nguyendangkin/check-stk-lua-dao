@@ -259,6 +259,29 @@ const handleDeleteComment = async (idComment) => {
     }
 };
 
+const handleDeleteAllComment = async (idPost, idUser) => {
+    try {
+        await db.DepenPost.destroy({
+            where: {
+                postId: idPost, // Chỉ xóa bình luận thuộc postId cụ thể
+                userId: idUser, // Chỉ xóa
+            },
+        });
+        return {
+            EM: "Xóa tất cả bình luận thành công.",
+            EC: 0,
+            DT: null,
+        };
+    } catch (error) {
+        console.error("Error in handleDeleteAllComment:", error);
+        return {
+            EM: "Lỗi khi xóa tất cả bình luận.",
+            EC: 1,
+            DT: null,
+        };
+    }
+};
+
 module.exports = {
     handleGetAllPosts,
     handleGetPost,
@@ -266,4 +289,5 @@ module.exports = {
     handleGetInfoUser,
     handleDeletePost,
     handleDeleteComment,
+    handleDeleteAllComment,
 };

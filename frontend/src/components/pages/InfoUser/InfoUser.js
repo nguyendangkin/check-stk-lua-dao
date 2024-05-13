@@ -1,12 +1,10 @@
-// components/InfoUser.js
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     requestGetInfoUser,
-    deleteDepenPost,
-    deletePost,
     requestDeletePost,
     requestDeleteComment,
+    requestDeleteAllComment,
 } from "../../../redux/requestApi/postsApiThunk";
 import {
     Card,
@@ -14,6 +12,7 @@ import {
     Container,
     Row,
     Col,
+    Form,
     Button,
     Modal,
 } from "react-bootstrap";
@@ -21,23 +20,38 @@ import {
 const InfoUser = () => {
     const dispatch = useDispatch();
     const listInfoUser = useSelector((state) => state.posts?.listInfoUser);
+    const idInfoUser = useSelector((state) => state.posts?.idInfoUser);
     const [showModal, setShowModal] = useState(false);
     const [deleteInfo, setDeleteInfo] = useState({ type: "", id: null });
-
-    useEffect(() => {
-        // dispatch(requestGetInfoUser());
-    }, [dispatch]);
 
     const handleDelete = (type, id) => {
         setDeleteInfo({ type, id });
         setShowModal(true);
     };
 
+    const handleDeleteAllComment = (postId) => {
+        dispatch(
+            requestDeleteAllComment({ idPost: postId, idUser: idInfoUser })
+        )
+            .then(() => {
+                dispatch(requestGetInfoUser({ idUser: idInfoUser }));
+            })
+            .catch(() => {});
+    };
+
     const confirmDelete = () => {
         if (deleteInfo.type === "post") {
-            dispatch(requestDeletePost({ idPost: deleteInfo.id }));
+            dispatch(requestDeletePost({ idPost: deleteInfo.id }))
+                .then(() => {
+                    dispatch(requestGetInfoUser({ idUser: idInfoUser }));
+                })
+                .catch(() => {});
         } else if (deleteInfo.type === "depenPost") {
-            dispatch(requestDeleteComment({ idComment: deleteInfo.id }));
+            dispatch(requestDeleteComment({ idComment: deleteInfo.id }))
+                .then(() => {
+                    dispatch(requestGetInfoUser({ idUser: idInfoUser }));
+                })
+                .catch(() => {});
         }
         setShowModal(false);
     };
@@ -51,6 +65,10 @@ const InfoUser = () => {
         <Container>
             {listInfoUser && (
                 <Card>
+                    <Form.Control
+                        type="search"
+                        placeholder="Số - Số tài khoản"
+                    />
                     <Card.Header>User Information</Card.Header>
                     <Card.Body>
                         <Card.Title>{listInfoUser.email}</Card.Title>
@@ -75,7 +93,18 @@ const InfoUser = () => {
                                                     )
                                                 }
                                             >
-                                                Delete Post
+                                                Xóa số tài khoản
+                                            </Button>
+                                            <Button
+                                                className="ms-4"
+                                                variant="warning"
+                                                onClick={() =>
+                                                    handleDeleteAllComment(
+                                                        post.id
+                                                    )
+                                                }
+                                            >
+                                                Xóa mọi bình luận
                                             </Button>
                                         </Card.Header>
                                         <Card.Body>
@@ -146,7 +175,8 @@ const InfoUser = () => {
                                                                             )
                                                                         }
                                                                     >
-                                                                        Delete
+                                                                        Xóa bình
+                                                                        luận
                                                                     </Button>
                                                                 </Card.Body>
                                                             </Card>

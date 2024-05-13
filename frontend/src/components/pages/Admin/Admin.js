@@ -11,7 +11,7 @@ import { useDebounce } from "../../../HooksCustomer/debounce";
 import className from "classnames/bind";
 import { useNavigate } from "react-router-dom";
 import styles from "./Admin.module.scss";
-import { setIdUser } from "../../../redux/reducer/postsApiSlice";
+import { setIdInfoUser } from "../../../redux/reducer/postsApiSlice";
 import { requestGetInfoUser } from "../../../redux/requestApi/postsApiThunk";
 
 const cx = className.bind(styles);
@@ -133,6 +133,7 @@ const Admin = () => {
     const handleViewInfoUser = (idUser) => {
         dispatch(requestGetInfoUser({ idUser: idUser }))
             .then(() => {
+                dispatch(setIdInfoUser(idUser));
                 navigate("/thong-tin-nguoi-dung");
             })
             .catch((error) => {});

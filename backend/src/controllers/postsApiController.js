@@ -5,6 +5,7 @@ import {
     handleGetInfoUser,
     handleDeletePost,
     handleDeleteComment,
+    handleDeleteAllComment,
 } from "../services/postsApiService";
 
 // Controller for getting all posts based on search keywords, pagination limits, and offsets
@@ -164,6 +165,25 @@ const deleteComment = async (req, res) => {
     }
 };
 
+const deleteAllComment = async (req, res) => {
+    try {
+        const { idPost, idUser } = req.body; // ĐPost được truyền từ body
+        const result = await handleDeleteAllComment(idPost, idUser);
+        if (result) {
+            return res.json({
+                EC: result.EC,
+                EM: result.EM,
+                DT: result.DT,
+            });
+        }
+    } catch (error) {
+        console.error("Error in deleteAllComment controller:", error);
+        res.status(500).json({
+            error: "An error occurred while deleting all the comments.",
+        });
+    }
+};
+
 module.exports = {
     getAllPosts,
     getPost,
@@ -171,4 +191,5 @@ module.exports = {
     getInfoUser,
     deletePost,
     deleteComment,
+    deleteAllComment,
 };

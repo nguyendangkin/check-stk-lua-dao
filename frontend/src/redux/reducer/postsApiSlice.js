@@ -14,6 +14,7 @@ const initialState = {
     totalPosts: 0,
     totalDepenPosts: 0,
     listInfoUser: null,
+    idInfoUser: null,
     loading: false,
 };
 
@@ -25,6 +26,10 @@ export const counterSlice = createSlice({
         resetDepenPosts: (state) => {
             state.depenPosts = [];
             state.totalDepenPosts = 0;
+        },
+
+        setIdInfoUser: (state, action) => {
+            state.idInfoUser = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -80,5 +85,5 @@ export const counterSlice = createSlice({
     },
 });
 
-export const { resetDepenPosts, setIdUser } = counterSlice.actions;
+export const { resetDepenPosts, setIdInfoUser } = counterSlice.actions;
 export default counterSlice.reducer;

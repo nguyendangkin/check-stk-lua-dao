@@ -105,6 +105,13 @@ const AppRoutes = (app) => {
         postsApiController.deleteComment
     );
 
+    router.post(
+        "/delete-all-comment",
+        authenticate,
+        authorize(["admin"]),
+        postsApiController.deleteAllComment
+    );
+
     // Route to handle all unspecified routes with a 404 message
     // Route xử lý tất cả các tuyến đường không xác định với thông báo 404
     router.get("*", (req, res) => {
