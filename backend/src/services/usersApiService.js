@@ -49,7 +49,12 @@ const handleGetAllUsers = async (searchKeyword, limit, offset) => {
             };
         }
     } catch (error) {
-        console.log(error);
+        console.error("Error in handleGetAllUsers:", error);
+        return {
+            EM: "Lỗi khi lấy dữ liệu người dùng.",
+            EC: 1,
+            DT: [],
+        };
     }
 };
 
@@ -115,9 +120,9 @@ const handlePostScammer = async (listAccount) => {
         await transaction.rollback();
         console.error("Error processing accounts:", error);
         return {
-            EM: "Đã xảy ra lỗi khi xử lý tài khoản. Ký tự vượt quá 255 ...",
+            EM: "Đã xảy ra lỗi khi xử lý tài khoản.",
             EC: 1,
-            error: error.toString(),
+            DT: [],
         };
     }
 };
@@ -144,7 +149,7 @@ const handleDeleteAccount = async (userId) => {
             };
         }
     } catch (error) {
-        console.log("Lỗi khi xóa tài khoản:", error);
+        console.error("Error in handleDeleteAccount:", error);
         return {
             EM: "Lỗi khi xóa tài khoản.",
             EC: -1,
@@ -177,7 +182,7 @@ const handleBanAccount = async (userId) => {
             };
         }
     } catch (error) {
-        console.log("Lỗi khi cố gắng cấm người dùng:", error);
+        console.error("Error in handleBanAccount:", error);
         return {
             EM: "Lỗi server khi cố gắng cấm người dùng.",
             EC: -1,

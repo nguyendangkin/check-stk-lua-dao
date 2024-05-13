@@ -44,7 +44,6 @@ const sendVerificationEmail = async (email, verificationCode) => {
         // Sends the email using the transporter and logs the message ID upon success.
         // Gửi email bằng bộ vận chuyển và ghi lại ID message khi thành công.
         const info = await transporter.sendMail(mailOptions);
-        console.log("Message sent: %s", info.messageId);
 
         return {
             EM: "Đăng ký thành công. Vui lòng xác nhận email để hoàn tất đăng ký.",
@@ -56,7 +55,7 @@ const sendVerificationEmail = async (email, verificationCode) => {
         return {
             EM: "Có lỗi xảy ra khi gửi email xác nhận.",
             EC: -3,
-            DT: error.message,
+            DT: null,
         };
     }
 };
@@ -193,11 +192,11 @@ const handleRegisterUser = async (email, password, fullName) => {
             DT: null,
         };
     } catch (error) {
-        console.error(error);
+        console.error("Error during user registration:", error);
         return {
             EM: "Lỗi hệ thống.",
             EC: -2,
-            DT: error.message,
+            DT: null,
         };
     }
 };
@@ -218,7 +217,8 @@ const handleExistsEmail = async (email) => {
             return false;
         }
     } catch (error) {
-        console.log(error);
+        console.error("Error checking if email exists:", error);
+        return false;
     }
 };
 
@@ -302,7 +302,11 @@ const handleSaveCodeVery = async (email, code) => {
 
         return { EC: 0, EM: "Cập nhật thành công." };
     } catch (error) {
-        console.log(error);
+        console.error("Error saving verification code:", error);
+        return {
+            EC: -1,
+            EM: "Lỗi khi lưu mã xác minh.",
+        };
     }
 };
 

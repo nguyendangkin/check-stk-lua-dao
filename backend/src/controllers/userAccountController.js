@@ -66,7 +66,7 @@ const veryCodeRegister = async (req, res) => {
         return res.status(500).json({
             EM: "Có lỗi xảy ra khi xác minh mã.",
             EC: -2,
-            DT: error.message,
+            DT: null,
         });
     }
 };
@@ -131,8 +131,10 @@ const sendCodeEmail = async (req, res) => {
 
         return res.json({ EC: 0, EM: "Mã đã được gửi thành công." });
     } catch (error) {
-        console.log(error);
-        return res.json({ EC: -3, EM: "Có lỗi xảy ra khi gửi mã." });
+        console.error("Error sending verification code:", error);
+        return res
+            .status(500)
+            .json({ EC: -3, EM: "Có lỗi xảy ra khi gửi mã." });
     }
 };
 
@@ -190,11 +192,11 @@ const userRegister = async (req, res) => {
             DT: [],
         });
     } catch (error) {
-        console.log(error);
+        console.error("Error during user registration:", error);
         return res.status(500).json({
-            EM: "Lỗi hệ thống",
+            EM: "Lỗi hệ thống.",
             EC: -2,
-            DT: error.message,
+            DT: null,
         });
     }
 };
@@ -382,8 +384,10 @@ const passRetri = async (req, res) => {
             EC: 0,
         });
     } catch (error) {
-        console.log(error);
-        return res.json({ EC: -4, EM: "Có lỗi xảy ra khi đổi mật khẩu." });
+        console.error("Error during password reset:", error);
+        return res
+            .status(500)
+            .json({ EC: -4, EM: "Có lỗi xảy ra khi đổi mật khẩu." });
     }
 };
 

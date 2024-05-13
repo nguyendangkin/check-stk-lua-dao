@@ -41,8 +41,8 @@ const getAllUsers = async (req, res) => {
             });
         }
     } catch (error) {
-        console.log(error);
-        return res.json({
+        console.error("Error in getAllUsers:", error);
+        return res.status(500).json({
             EC: 1,
             EM: "Lỗi khi lấy dữ liệu.",
             DT: [],
@@ -130,7 +130,7 @@ const postScammer = async (req, res) => {
             });
         }
     } catch (error) {
-        console.log(error);
+        console.error("Error in postScammer:", error);
         return res.status(500).json({
             EC: -1,
             EM: "Server Lỗi",
@@ -161,7 +161,7 @@ const bandAccount = async (req, res) => {
             EM: result.EM,
         });
     } catch (error) {
-        console.log("Lỗi server:", error);
+        console.error("Error in bandAccount:", error);
         return res.status(500).json({
             EC: 1,
             EM: "Lỗi server khi cố gắng cấm tài khoản.",
@@ -191,10 +191,11 @@ const deleteAccount = async (req, res) => {
             EM: result.EM,
         });
     } catch (error) {
-        console.log("Lỗi server:", error);
-        return res
-            .status(500)
-            .json({ EC: 1, EM: "Lỗi server khi xóa tài khoản." });
+        console.error("Error in deleteAccount:", error);
+        return res.status(500).json({
+            EC: 1,
+            EM: "Lỗi server khi xóa tài khoản.",
+        });
     }
 };
 
