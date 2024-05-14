@@ -62,12 +62,10 @@ const handleGetAllUsers = async (searchKeyword, limit, offset) => {
 // Hàm xử lý đăng danh sách tài khoản lừa đảo với xử lý giao dịch
 const handlePostScammer = async (listAccount) => {
     // Start a new transaction
-    // Bắt đầu một transaction mới
     const transaction = await db.sequelize.transaction();
 
     try {
         // Normalize Vietnamese characters in account details
-        // Chuẩn hóa các ký tự tiếng Việt trong chi tiết tài khoản
         listAccount.accounts = listAccount.accounts.map((account) => ({
             ...account,
             accountNumber: normalizeVietnamese(account.accountNumber),
@@ -78,26 +76,29 @@ const handlePostScammer = async (listAccount) => {
         const { accounts, userId } = listAccount;
 
         // Iterate through each account
-        // Lặp qua từng tài khoản
         for (const account of accounts) {
             // Find or create a new post for each account
-            // Tìm hoặc tạo một bài đăng mới cho mỗi tài khoản
-            const [existingPost, created] = await db.Post.findOrCreate({
+            const [post, created] = await db.Post.findOrCreate({
                 where: { accountNumber: account.accountNumber },
                 defaults: {
                     accountNumber: account.accountNumber,
                     accountName: account.accountName,
                     bankName: account.bankName,
-                    userId: userId,
                 },
                 transaction,
             });
 
-            // Create a DepenPost record linked to the post
-            // Tạo một bản ghi DepenPost liên kết với bài đăng
+            // Associate the post with the current user in UserPosts
+            await db.UserPost.findOrCreate({
+                where: { userId: userId, postId: post.id },
+                defaults: { userId: userId, postId: post.id },
+                transaction,
+            });
+
+            // Create a DepenPost record linked to the post and user
             await db.DepenPost.create(
                 {
-                    postId: existingPost.id,
+                    postId: post.id,
                     evidenceLink: account.evidenceLink,
                     advice: account.advice,
                     userId: userId,
@@ -107,7 +108,6 @@ const handlePostScammer = async (listAccount) => {
         }
 
         // Commit the transaction
-        // Xác nhận transaction
         await transaction.commit();
 
         return {
@@ -116,7 +116,6 @@ const handlePostScammer = async (listAccount) => {
         };
     } catch (error) {
         // Rollback the transaction in case of error
-        // Hoàn tác transaction trong trường hợp lỗi
         await transaction.rollback();
         console.error("Error processing accounts:", error);
         return {

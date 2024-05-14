@@ -1,4 +1,4 @@
-const { Sequelize, Op } = require("sequelize");
+const { Sequelize, Op, where } = require("sequelize");
 import db from "../../models/index";
 
 // Function to handle retrieving all posts with optional search, pagination, and ordering
@@ -184,6 +184,7 @@ const handleGetInfoUser = async (id) => {
             include: [
                 {
                     model: db.Post,
+                    through: { model: db.UserPost, unique: false }, // Sử dụng bảng trung gian UserPosts
                     attributes: [
                         "id",
                         "accountNumber",
@@ -199,6 +200,7 @@ const handleGetInfoUser = async (id) => {
                                 "advice",
                                 "postId",
                             ],
+                            where: { userId: id },
                         },
                     ],
                 },
