@@ -184,13 +184,13 @@ const handleGetInfoUser = async (id) => {
             include: [
                 {
                     model: db.Post,
-                    through: { model: db.UserPost, unique: false }, // Sử dụng bảng trung gian UserPosts
                     attributes: [
                         "id",
                         "accountNumber",
                         "accountName",
                         "bankName",
                     ],
+                    through: { attributes: [] }, // Không lấy thuộc tính từ bảng trung gian nếu không cần thiết
                     include: [
                         {
                             model: db.DepenPost,
@@ -201,11 +201,13 @@ const handleGetInfoUser = async (id) => {
                                 "postId",
                             ],
                             where: { userId: id },
+                            required: false, // Đặt là false để luôn lấy Post kể cả khi không có DepenPost
                         },
                     ],
                 },
             ],
         });
+
         return {
             EM: "Lấy thông tin người dùng thành công.",
             EC: 0,
@@ -224,33 +226,38 @@ const handleGetInfoUser = async (id) => {
 const handleDeletePost = async (postId, userId) => {
     const transaction = await db.sequelize.transaction();
     try {
-        console.log("check1", postId, "_", userId);
-        // Đầu tiên xóa các DepenPost liên quan đến bài viết
+        console.log(
+            "Starting deletion of user post relations",
+            postId,
+            "for user",
+            userId
+        );
+        // Xóa các bình luận liên quan đến bài viết và người dùng này
         await db.DepenPost.destroy({
             where: { postId: postId, userId: userId },
             transaction,
         });
 
-        // Sau đó xóa bài viết
-        await db.Post.destroy({
-            where: { id: postId, userId: userId },
+        // Xóa mối liên hệ trong UserPost giữa người dùng và bài viết
+        await db.UserPost.destroy({
+            where: { postId: postId, userId: userId },
             transaction,
         });
 
-        // Nếu không có lỗi, commit transaction
+        // Commit transaction nếu không có lỗi
         await transaction.commit();
 
         return {
-            EM: "Xóa bài viết và tất cả bình luận liên quan thành công.",
+            EM: "Xóa mối liên hệ và bình luận liên quan thành công.",
             EC: 0,
             DT: null,
         };
     } catch (error) {
-        // Nếu có lỗi, rollback transaction
+        // Rollback transaction nếu có lỗi
         await transaction.rollback();
         console.error("Error in handleDeletePost:", error);
         return {
-            EM: "Lỗi khi xóa bài viết.",
+            EM: "Lỗi khi xóa mối liên hệ bài viết.",
             EC: 1,
             DT: null,
         };
