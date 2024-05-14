@@ -6,6 +6,7 @@ import {
     requestDeleteComment,
     requestDeleteAllComment,
 } from "../../../redux/requestApi/postsApiThunk";
+import ReactPaginate from "react-paginate";
 import {
     Card,
     ListGroup,
@@ -20,6 +21,9 @@ import {
 const InfoUser = () => {
     const dispatch = useDispatch();
     const listInfoUser = useSelector((state) => state.posts?.listInfoUser);
+    const totalPosts = useSelector(
+        (state) => state.posts?.listInfoUser.totalPosts
+    );
     const idInfoUser = useSelector((state) => state.posts?.idInfoUser);
     const [showModal, setShowModal] = useState(false);
     const [deleteInfo, setDeleteInfo] = useState({ type: "", id: null });
@@ -37,6 +41,19 @@ const InfoUser = () => {
                 dispatch(requestGetInfoUser({ idUser: idInfoUser }));
             })
             .catch(() => {});
+    };
+
+    const itemsPerPage = 5; // Gi
+
+    const handlePageClick = (data) => {
+        const currentPage = data.selected + 1; // `data.selected` là chỉ số trang được chọn, bắt đầu từ 0
+        dispatch(
+            requestGetInfoUser({
+                idUser: idInfoUser,
+                page: currentPage,
+                pageSize: itemsPerPage,
+            })
+        );
     };
 
     const confirmDelete = () => {
@@ -73,14 +90,14 @@ const InfoUser = () => {
                     />
                     <Card.Header>User Information</Card.Header>
                     <Card.Body>
-                        <Card.Title>{listInfoUser.email}</Card.Title>
+                        <Card.Title>{listInfoUser.user.email}</Card.Title>
                         <Card.Text>
                             <strong>Full Name: </strong>
-                            {listInfoUser.fullName}
+                            {listInfoUser.user.fullName}
                         </Card.Text>
                         <Card.Title>Posts</Card.Title>
                         <ListGroup variant="flush">
-                            {listInfoUser.Posts.map((post) => (
+                            {listInfoUser.posts.map((post) => (
                                 <ListGroup.Item key={post.id}>
                                     <Card>
                                         <Card.Header>
@@ -194,6 +211,25 @@ const InfoUser = () => {
                     </Card.Body>
                 </Card>
             )}
+            <ReactPaginate
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                marginPagesDisplayed={2}
+                pageCount={Math.ceil(totalPosts / itemsPerPage)} // Tính toán tổng số trang
+                previousLabel="<"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakLabel="..."
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                containerClassName="pagination"
+                activeClassName="active"
+            />
             <Modal show={showModal} onHide={cancelDelete}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Deletion</Modal.Title>

@@ -176,34 +176,34 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
     }
 };
 
-const handleGetInfoUser = async (id) => {
+const handleGetInfoUser = async (id, page = 1, pageSize = 5) => {
+    const offset = (page - 1) * pageSize;
+
     try {
-        const user = await db.User.findOne({
-            where: { id: id },
+        // Lấy thông tin người dùng
+        const user = await db.User.findByPk(id, {
             attributes: ["id", "email", "fullName"],
+        });
+
+        if (!user) {
+            return {
+                EM: "Không tìm thấy người dùng.",
+                EC: 1,
+                DT: null,
+            };
+        }
+
+        // Lấy các bài viết với phân trang
+        const posts = await db.Post.findAndCountAll({
+            where: { userId: id },
+            limit: pageSize,
+            offset: offset,
             include: [
                 {
-                    model: db.Post,
-                    attributes: [
-                        "id",
-                        "accountNumber",
-                        "accountName",
-                        "bankName",
-                    ],
-                    through: { attributes: [] }, // Không lấy thuộc tính từ bảng trung gian nếu không cần thiết
-                    include: [
-                        {
-                            model: db.DepenPost,
-                            attributes: [
-                                "id",
-                                "evidenceLink",
-                                "advice",
-                                "postId",
-                            ],
-                            where: { userId: id },
-                            required: false, // Đặt là false để luôn lấy Post kể cả khi không có DepenPost
-                        },
-                    ],
+                    model: db.DepenPost,
+                    attributes: ["id", "evidenceLink", "advice", "postId"],
+                    where: { userId: id },
+                    required: false,
                 },
             ],
         });
@@ -211,7 +211,11 @@ const handleGetInfoUser = async (id) => {
         return {
             EM: "Lấy thông tin người dùng thành công.",
             EC: 0,
-            DT: user,
+            DT: {
+                user: user,
+                posts: posts.rows,
+                totalPosts: posts.count,
+            },
         };
     } catch (error) {
         console.error("Error fetching user info:", error);

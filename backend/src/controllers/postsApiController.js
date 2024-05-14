@@ -110,7 +110,10 @@ const getComment = async (req, res) => {
 const getInfoUser = async (req, res) => {
     try {
         const idUser = req.body.idUser;
-        const infoUser = await handleGetInfoUser(idUser);
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 5;
+
+        const infoUser = await handleGetInfoUser(idUser, page, pageSize);
         if (infoUser) {
             return res.json({
                 EC: infoUser.EC,
