@@ -129,8 +129,8 @@ const getInfoUser = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const idPost = req.body.idPost;
-        console.log("check idPost", idPost);
-        const result = await handleDeletePost(idPost);
+        const idUser = req.body.idUser;
+        const result = await handleDeletePost(idPost, idUser);
         if (result) {
             return res.json({
                 EC: result.EC,

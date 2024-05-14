@@ -221,17 +221,33 @@ const handleGetInfoUser = async (id) => {
     }
 };
 
-const handleDeletePost = async (idPost) => {
+const handleDeletePost = async (postId, userId) => {
+    const transaction = await db.sequelize.transaction();
     try {
-        await db.Post.destroy({
-            where: { id: idPost },
+        console.log("check1", postId, "_", userId);
+        // Đầu tiên xóa các DepenPost liên quan đến bài viết
+        await db.DepenPost.destroy({
+            where: { postId: postId, userId: userId },
+            transaction,
         });
+
+        // Sau đó xóa bài viết
+        await db.Post.destroy({
+            where: { id: postId, userId: userId },
+            transaction,
+        });
+
+        // Nếu không có lỗi, commit transaction
+        await transaction.commit();
+
         return {
-            EM: "Xóa bài viết thành công.",
+            EM: "Xóa bài viết và tất cả bình luận liên quan thành công.",
             EC: 0,
             DT: null,
         };
     } catch (error) {
+        // Nếu có lỗi, rollback transaction
+        await transaction.rollback();
         console.error("Error in handleDeletePost:", error);
         return {
             EM: "Lỗi khi xóa bài viết.",

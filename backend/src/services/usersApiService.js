@@ -84,6 +84,7 @@ const handlePostScammer = async (listAccount) => {
                     accountNumber: account.accountNumber,
                     accountName: account.accountName,
                     bankName: account.bankName,
+                    userId: userId,
                 },
                 transaction,
             });

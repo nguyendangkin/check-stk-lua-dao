@@ -41,7 +41,9 @@ const InfoUser = () => {
 
     const confirmDelete = () => {
         if (deleteInfo.type === "post") {
-            dispatch(requestDeletePost({ idPost: deleteInfo.id }))
+            dispatch(
+                requestDeletePost({ idPost: deleteInfo.id, idUser: idInfoUser })
+            )
                 .then(() => {
                     dispatch(requestGetInfoUser({ idUser: idInfoUser }));
                 })
