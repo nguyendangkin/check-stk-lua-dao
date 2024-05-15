@@ -6,7 +6,7 @@ import { logOut } from "../redux/reducer/userAccountSlice";
 // Create an Axios instance with base URL and credentials
 // Tạo một instance của Axios với URL cơ bản và credentials
 const instance = axios.create({
-    baseURL: "http://localhost:3001/",
+    baseURL: process.env.REACT_APP_API_BASE_URL,
     withCredentials: true,
 });
 
