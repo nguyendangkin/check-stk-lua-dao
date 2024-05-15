@@ -1,7 +1,8 @@
 import Nav from "react-bootstrap/Nav";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames/bind";
+import { jwtDecode } from "jwt-decode";
 import styles from "./MainHeader.module.scss";
 import { useState } from "react";
 import Container from "react-bootstrap/Container";
@@ -17,27 +18,23 @@ const cx = classNames.bind(styles);
 // MainHeader component for the application header
 // Component MainHeader cho header của ứng dụng
 function MainHeader() {
-    // Get user account details from Redux store
-    // Lấy thông tin tài khoản người dùng từ Redux store
     const userAccount = useSelector((state) => state.user?.userAccount);
-
-    const distPatch = useDispatch();
-
-    // State to handle active status of dropdown
-    // State để xử lý trạng thái hoạt động của dropdown
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [isActive, setIsActive] = useState(false);
 
-    // Handle click event to toggle active state
-    // Xử lý sự kiện click để chuyển đổi trạng thái hoạt động
-    const handleOnClick = (e) => {
-        setIsActive(!isActive);
-    };
+    // Decode the JWT to extract user roles
+    let userRole = "";
+    if (userAccount?.accessToken) {
+        const decodedToken = jwtDecode(userAccount.accessToken);
+        userRole = decodedToken.roles.roleName; // Correcting the path to the role name
+    }
+    const handleOnClick = () => setIsActive(!isActive);
 
-    // Handle logout event
-    // Xử lý sự kiện đăng xuất
     const handleLogout = () => {
-        distPatch(requestLogout());
-        distPatch(logOut());
+        dispatch(requestLogout());
+        dispatch(logOut());
+        navigate("/");
     };
 
     return (
@@ -85,9 +82,15 @@ function MainHeader() {
                         >
                             {userAccount?.accessToken && (
                                 <>
-                                    <NavDropdown.Item>
-                                        Thông tin cá nhân
-                                    </NavDropdown.Item>
+                                    {userAccount?.accessToken &&
+                                        userRole === "admin" && (
+                                            <NavDropdown.Item
+                                                as={Link}
+                                                to="/admin"
+                                            >
+                                                Quản lý người dùng
+                                            </NavDropdown.Item>
+                                        )}
                                     <NavDropdown.Item
                                         onClick={() => handleLogout()}
                                     >
