@@ -72,7 +72,7 @@ export const authenticate = async (req, res, next) => {
         if (!authHeader || !refreshToken) {
             return res.status(401).json({
                 EM: "Thiếu token xác thực hoặc refresh token.",
-                EC: -1,
+                EC: -2,
             });
         }
 
@@ -104,12 +104,13 @@ export const authenticate = async (req, res, next) => {
                         } else {
                             return res.status(401).json({
                                 EM: "Không thể làm mới access token.",
+                                EC: -2,
                             });
                         }
                     } else {
                         return res.status(401).json({
                             EM: "Token xác thực không hợp lệ.",
-                            EC: -1,
+                            EC: -2,
                         });
                     }
                 } else {

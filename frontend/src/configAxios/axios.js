@@ -1,5 +1,7 @@
 import axios from "axios";
 import { store } from "./../redux/store";
+import { useNavigate } from "react-router-dom";
+import { logOut } from "../redux/reducer/userAccountSlice";
 
 // Create an Axios instance with base URL and credentials
 // Tạo một instance của Axios với URL cơ bản và credentials
@@ -34,13 +36,19 @@ instance.interceptors.request.use(
 // Interceptor phản hồi để xử lý phản hồi và lỗi
 instance.interceptors.response.use(
     function (response) {
-        // Any status code that lie within the range of 2xx cause this function to trigger
-        // Do something with response data
         return response;
     },
     function (error) {
-        // Any status codes that falls outside the range of 2xx cause this function to trigger
-        // Do something with response error
+        // Check for error response and handle 401 Unauthorized specifically
+        if (error.response && error.response.status === 401) {
+            if (error.response.data.EC === -2) {
+                // Assuming logoutUser is a Redux action to clear the user state
+                store.dispatch(logOut());
+                // Redirect to login page
+                window.location.href = "/dang-nhap";
+                // If using React Router v6, you might use navigate('/login') instead
+            }
+        }
         return Promise.reject(error);
     }
 );

@@ -56,11 +56,6 @@ function MainHeader() {
                                 Hướng dẫn sử dụng
                             </Nav.Link>
                         </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link as={Link} to={"/admin"}>
-                                FORADMIN
-                            </Nav.Link>
-                        </Nav.Item>
                         <NavDropdown
                             title={
                                 <button

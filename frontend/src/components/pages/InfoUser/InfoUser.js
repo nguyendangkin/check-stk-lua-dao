@@ -22,7 +22,7 @@ const InfoUser = () => {
     const dispatch = useDispatch();
     const listInfoUser = useSelector((state) => state.posts?.listInfoUser);
     const totalPosts = useSelector(
-        (state) => state.posts?.listInfoUser.totalPosts
+        (state) => state.posts?.listInfoUser?.totalPosts
     );
     const idInfoUser = useSelector((state) => state.posts?.idInfoUser);
     const [showModal, setShowModal] = useState(false);
