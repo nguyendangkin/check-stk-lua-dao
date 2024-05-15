@@ -194,7 +194,11 @@ const PostScam = () => {
             const decodedToken = jwtDecode(accessToken);
             const userId = decodedToken.id;
 
-            const payload = { accounts, userId };
+            // Loại bỏ trường isEditing trước khi gửi
+            const payloadAccounts = accounts.map(
+                ({ isEditing, ...account }) => account
+            );
+            const payload = { accounts: payloadAccounts, userId };
 
             dispatch(requestPostScam(payload))
                 .then((result) => {
