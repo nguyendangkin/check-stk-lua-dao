@@ -122,6 +122,13 @@ const Admin = () => {
                 // Cập nhật danh sách người dùng hoặc thông báo người dùng đã bị ban
                 setShowBanModal(false);
                 setUserToBan(null);
+                dispatch(
+                    requestGetFilteredUsers({
+                        searchKeyword: debouncedKeyword,
+                        limit: usersPerPage,
+                        offset: itemOffset,
+                    })
+                );
             })
             .catch((error) => {
                 console.error("Error banning user:", error);

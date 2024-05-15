@@ -161,12 +161,19 @@ const handleDeleteAccount = async (userId) => {
 // Hàm xử lý cấm người dùng bằng cách đặt groupId của họ thành 3
 const handleBanAccount = async (userId) => {
     try {
-        // Attempt to update the user's groupId to 3 (banned)
-        // Cố gắng cập nhật groupId của người dùng thành 3 (bị cấm)
+        // Đảm bảo ID người dùng hợp lệ
+        if (!userId) {
+            return {
+                EM: "ID người dùng không được cung cấp.",
+                EC: -1,
+            };
+        }
+
+        // Cố gắng cập nhật trạng thái isBanned của người dùng thành true
         const result = await db.User.update(
-            { groupId: 3 },
+            { isBanned: true, groupId: 3 }, // Đưa tất cả các trường cần cập nhật vào đối tượng đầu tiên
             {
-                where: { id: userId },
+                where: { id: userId }, // Điều kiện cập nhật trong đối tượng thứ hai
             }
         );
 
@@ -182,7 +189,7 @@ const handleBanAccount = async (userId) => {
             };
         }
     } catch (error) {
-        console.error("Error in handleBanAccount:", error);
+        console.error("Lỗi khi cố gắng cấm người dùng:", error);
         return {
             EM: "Lỗi server khi cố gắng cấm người dùng.",
             EC: -1,

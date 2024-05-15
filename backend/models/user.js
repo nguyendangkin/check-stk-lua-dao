@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             codeVery: DataTypes.STRING,
             codeCreatedAt: DataTypes.DATE,
             isVerified: DataTypes.BOOLEAN,
+            isBanned: DataTypes.BOOLEAN,
             groupId: {
                 type: DataTypes.INTEGER,
                 defaultValue: 2,

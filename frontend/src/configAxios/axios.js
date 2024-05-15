@@ -40,13 +40,25 @@ instance.interceptors.response.use(
     },
     function (error) {
         // Check for error response and handle 401 Unauthorized specifically
-        if (error.response && error.response.status === 401) {
-            if (error.response.data.EC === -2) {
-                // Assuming logoutUser is a Redux action to clear the user state
+        if (error.response) {
+            if (
+                error.response.status === 401 &&
+                error.response.data.EC === -2
+            ) {
+                // Assuming logOut is a Redux action to clear the user state
                 store.dispatch(logOut());
                 // Redirect to login page
                 window.location.href = "/dang-nhap";
                 // If using React Router v6, you might use navigate('/login') instead
+            } else if (
+                error.response.status === 403 &&
+                error.response.data.EC === -3
+            ) {
+                // Handle case when the user is banned
+                store.dispatch(logOut());
+                // Redirect to login page, showing that they've been banned
+                window.location.href = "/cam-tai-khoan";
+                // Optionally, you could pass a query parameter or similar to show a specific message on the login page
             }
         }
         return Promise.reject(error);

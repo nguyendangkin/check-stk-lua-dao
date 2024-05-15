@@ -26,6 +26,10 @@ module.exports = {
             isVerified: {
                 type: Sequelize.BOOLEAN,
             },
+            isBanned: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+            },
             groupId: {
                 type: Sequelize.INTEGER,
             },

@@ -59,16 +59,9 @@ const refreshAccessToken = async (refreshToken) => {
 // Middleware xác thực người dùng bằng cách xác minh access token và làm mới nó nếu hết hạn.
 export const authenticate = async (req, res, next) => {
     try {
-        // Attempts to retrieve the authorization header and refresh token from the request.
-        // Cố gắng lấy authorization header và refresh token từ request.
         const authHeader = req.headers["authorization"];
-
-        // Checks if both access token and refresh token are present.
-        // Kiểm tra xem cả access token và refresh token đều có hay không.
         const refreshToken = req.cookies.refreshToken;
 
-        // Returns an error response if either token is missing.
-        // Trả về response lỗi nếu thiếu một trong hai token.
         if (!authHeader || !refreshToken) {
             return res.status(401).json({
                 EM: "Thiếu token xác thực hoặc refresh token.",
@@ -76,27 +69,18 @@ export const authenticate = async (req, res, next) => {
             });
         }
 
-        // Extracts the access token from the authorization header.
-        // Trích xuất access token từ authorization header.
         const accessToken = authHeader.split(" ")[1];
 
-        // Verifies the access token using the JWT secret.
-        // Kiểm tra tính hợp lệ của access token bằng JWT secret.
         jwt.verify(
             accessToken,
             process.env.JWT_SECRET,
             async (err, decoded) => {
                 if (err) {
                     if (err.name === "TokenExpiredError") {
-                        // If the error is a TokenExpiredError, attempts to refresh the access token.
-                        // Nếu lỗi là TokenExpiredError, hãy thử làm mới access token.
                         const newAccessToken = await refreshAccessToken(
                             refreshToken
                         );
-
                         if (newAccessToken) {
-                            // If refresh is successful, updates the authorization header with the new token.
-                            // Nếu làm mới thành công, cập nhật authorization header với token mới.
                             req.headers[
                                 "authorization"
                             ] = `Bearer ${newAccessToken}`;
@@ -114,9 +98,16 @@ export const authenticate = async (req, res, next) => {
                         });
                     }
                 } else {
-                    // If verification is successful, attaches the decoded user information to the request.
-                    // Nếu xác minh thành công, đính kèm thông tin người dùng giải mã vào request.
-                    req.user = decoded;
+                    const user = await db.User.findOne({
+                        where: { id: decoded.id },
+                    });
+                    if (user.isBanned) {
+                        return res.status(403).json({
+                            EM: "Tài khoản của bạn đã bị cấm.",
+                            EC: -3,
+                        });
+                    }
+                    req.user = decoded; // Attach user data to request
                     return next();
                 }
             }
