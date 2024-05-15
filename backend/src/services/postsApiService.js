@@ -177,50 +177,62 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
 };
 
 const handleGetInfoUser = async (id, page = 1, pageSize = 5) => {
+    console.log("Fetching user info", id, page, pageSize);
     const offset = (page - 1) * pageSize;
 
     try {
-        // Lấy thông tin người dùng
         const user = await db.User.findByPk(id, {
             attributes: ["id", "email", "fullName"],
         });
 
         if (!user) {
             return {
-                EM: "Không tìm thấy người dùng.",
+                EM: "User not found.",
                 EC: 1,
                 DT: null,
             };
         }
 
-        // Lấy các bài viết với phân trang
-        const posts = await db.Post.findAndCountAll({
+        // Fetching posts through the UserPost association with correct aliases
+        const { count, rows } = await db.UserPost.findAndCountAll({
             where: { userId: id },
             limit: pageSize,
             offset: offset,
             include: [
                 {
-                    model: db.DepenPost,
-                    attributes: ["id", "evidenceLink", "advice", "postId"],
-                    where: { userId: id },
-                    required: false,
+                    model: db.Post,
+                    as: "Post", // Correct alias as defined in UserPost model
+                    include: [
+                        {
+                            model: db.DepenPost,
+                            as: "DepenPosts", // Correct alias as defined in Post model
+                            attributes: [
+                                "id",
+                                "evidenceLink",
+                                "advice",
+                                "postId",
+                            ],
+                            where: { userId: id },
+                            required: false,
+                        },
+                    ],
                 },
             ],
         });
 
         return {
-            EM: "Lấy thông tin người dùng thành công.",
+            EM: "Successfully retrieved user info.",
             EC: 0,
             DT: {
                 user: user,
-                posts: posts.rows,
-                totalPosts: posts.count,
+                posts: rows.map((userPost) => userPost.Post),
+                totalPosts: count,
             },
         };
     } catch (error) {
         console.error("Error fetching user info:", error);
         return {
-            EM: "Lỗi khi lấy thông tin người dùng.",
+            EM: "Error fetching user info.",
             EC: 1,
             DT: null,
         };

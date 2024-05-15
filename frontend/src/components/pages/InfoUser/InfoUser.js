@@ -84,10 +84,6 @@ const InfoUser = () => {
         <Container>
             {listInfoUser && (
                 <Card>
-                    <Form.Control
-                        type="search"
-                        placeholder="Số - Số tài khoản"
-                    />
                     <Card.Header>User Information</Card.Header>
                     <Card.Body>
                         <Card.Title>{listInfoUser.user.email}</Card.Title>
