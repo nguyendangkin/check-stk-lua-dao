@@ -10,6 +10,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { requestLogout } from "../../../redux/requestApi/userAccountThunk";
 import { logOut } from "../../../redux/reducer/userAccountSlice";
+import userAvatar from "./../../../images/user.png";
 
 // Bind styles using classnames
 // Gắn kết các styles sử dụng classnames
@@ -63,7 +64,7 @@ function MainHeader() {
                                     className={cx("avatar-button")}
                                 >
                                     <img
-                                        src="https://user-images.githubusercontent.com/522079/90506845-e8420580-e122-11ea-82ca-31087fc8486c.png"
+                                        src={userAvatar}
                                         className={cx(
                                             "rounded-circle",
                                             "avatar-image"

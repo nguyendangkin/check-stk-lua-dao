@@ -1,5 +1,69 @@
-@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+/* Đường dẫn tới thư mục chứa font */
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/static/MPLUS1Code-Bold.ttf")
+        format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
 
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/static/MPLUS1Code-ExtraLight.ttf")
+        format("truetype");
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/static/MPLUS1Code-Light.ttf")
+        format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/static/MPLUS1Code-Medium.ttf")
+        format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/static/MPLUS1Code-Regular.ttf")
+        format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/static/MPLUS1Code-SemiBold.ttf")
+        format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/static/MPLUS1Code-Thin.ttf")
+        format("truetype");
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("./../public/assets/fonts/M_PLUS_1_Code/MPLUS1Code-VariableFont_wght.ttf")
+        format("truetype");
+    font-weight: 100 700;
+    font-style: normal;
+}
+
+/* Sử dụng font */
 body {
     font-family: "M PLUS 1 Code", monospace;
 }
