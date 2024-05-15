@@ -64,6 +64,10 @@
 }
 
 /* Sử dụng font */
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: "M PLUS 1 Code", monospace;
 }

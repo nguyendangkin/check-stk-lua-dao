@@ -71,18 +71,11 @@ const getPost = async (req, res) => {
 // Controller để lấy các bình luận của một bài đăng dựa trên số tài khoản, với phân trang
 const getComment = async (req, res) => {
     try {
-        // Lấy số tài khoản từ body của request
-        // Get account number from request body
-        const accountNumber = req.body.accountNumber?.trim();
-
-        // Lấy trang và giới hạn từ body của request hoặc đặt mặc định
-        // Get page and limit from request body or set default values
-        const page = parseInt(req.body.page) || 1;
+        const accountNumber = req.body?.accountNumber?.trim();
         const limit = parseInt(req.body.limit) || 5;
+        const offset = parseInt(req.body.offset) || 0; // Use offset directly from request
 
-        // Gọi service để lấy các bình luận theo số tài khoản, trang và giới hạn
-        // Call the service function to get comments by account number, page, and limit
-        const comments = await handleGetComment(accountNumber, page, limit);
+        const comments = await handleGetComment(accountNumber, offset, limit);
 
         if (!comments) {
             return res
@@ -94,8 +87,6 @@ const getComment = async (req, res) => {
             EC: comments.EC,
             EM: comments.EM,
             DT: comments.DT,
-            // Tổng số bình luận
-            // Total number of comments
             totalComments: comments.totalComments,
         });
     } catch (error) {

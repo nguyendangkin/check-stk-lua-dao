@@ -8,10 +8,12 @@ import {
 } from "../../../redux/requestApi/postsApiThunk";
 import { useDebounce } from "../../../HooksCustomer/debounce";
 import Accordion from "react-bootstrap/Accordion";
+import throttle from "lodash/throttle";
 import ReactPaginate from "react-paginate";
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
 import { resetDepenPosts } from "../../../redux/reducer/postsApiSlice";
+import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
@@ -34,7 +36,6 @@ const Home = () => {
     // Biến state để quản lý UI và dữ liệu
     const [searchKeyword, setSearchKeyword] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
-    const [showScrollButton, setShowScrollButton] = useState(false);
     const [depenPostsPage, setDepenPostsPage] = useState(0);
     const detailRef = useRef(null);
     const lastDepenPostRef = useRef(null);
@@ -46,46 +47,19 @@ const Home = () => {
 
     const itemsPerPage = 5;
 
-    // Use Intersection Observer to watch the last element and load more data
-    // Sử dụng Intersection Observer để quan sát phần tử cuối cùng và tải thêm dữ liệu
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const lastEntry = entries[0];
-                if (
-                    lastEntry.isIntersecting &&
-                    depenPosts.length < totalDepenPosts
-                ) {
-                    setDepenPostsPage((prevPage) => prevPage + 1);
-                }
-            },
-            { rootMargin: "100px" }
-        );
-
-        if (lastDepenPostRef.current) {
-            observer.observe(lastDepenPostRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, [depenPosts, totalDepenPosts]);
-
     // API call to get comments based on the page number
     // Gọi API để lấy comment dựa trên số trang
     useEffect(() => {
-        if (
-            depenPostsPage > 0 &&
-            accountNumber &&
-            depenPosts.length < totalDepenPosts
-        ) {
+        if (accountNumber) {
             dispatch(
                 requestGetComment({
                     accountNumber,
-                    page: depenPostsPage,
                     limit: itemsPerPage,
+                    offset: depenPostsPage * itemsPerPage,
                 })
             );
         }
-    }, [depenPostsPage, dispatch, accountNumber, totalDepenPosts]);
+    }, [depenPostsPage, dispatch]);
 
     // Filter posts based on the debounced search keyword
     // Lọc bài đăng dựa trên từ khoá tìm kiếm đã được debounced
@@ -99,26 +73,6 @@ const Home = () => {
         );
     }, [debouncedSearchKeyword, currentPage, dispatch]);
 
-    // Scroll event to show/hide the scroll to top button
-    // Sự kiện cuộn trang để hiển thị/ẩn nút cuộn lên đầu trang
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.pageYOffset > 500) {
-                setShowScrollButton(true);
-            } else {
-                setShowScrollButton(false);
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-
-        // Cleanup when the component unmounts
-        // Dọn dẹp khi component được gỡ bỏ
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
-
     // Function to update account number and fetch data
     // Hàm để cập nhật số tài khoản và lấy dữ liệu
     const handleCheck = (number) => {
@@ -127,11 +81,6 @@ const Home = () => {
         dispatch(resetDepenPosts()); // Clear previous comments
         dispatch(requestGetPost({ accountNumber: number }));
         dispatch(requestGetComment({ accountNumber: number }));
-        setTimeout(() => {
-            if (detailRef.current) {
-                detailRef.current.scrollIntoView({ behavior: "smooth" });
-            }
-        }, 100);
     };
 
     // Normalize input string for consistent searching
@@ -149,21 +98,16 @@ const Home = () => {
         setCurrentPage(event.selected);
     };
 
+    const handlePageDepenClick = (event) => {
+        setDepenPostsPage(event.selected);
+    };
+
     // Handle changes in the search input field
     // Xử lý các thay đổi trong trường nhập tìm kiếm
     const handleSearchChange = (e) => {
         const normalizedValue = normalizeString(e.target.value);
         setSearchKeyword(normalizedValue); // Cập nhật trạng thái bằng chuỗi đã được chuẩn hóa và chuyển hoa
         setCurrentPage(0); // Reset về trang đầu tiên với t page with new search
-    };
-
-    // Scroll to the top of the page
-    // Cuộn lên đầu trang
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
     };
 
     return (
@@ -283,19 +227,34 @@ const Home = () => {
                                         </Accordion.Item>
                                     </Accordion>
                                 </Card.Body>
-                                <span style={{ fontSize: "14px" }}>
-                                    {index + 1}
-                                </span>
                             </Card>
                         ))}
+                        <div className="mt-2 d-flex justify-content-center">
+                            <ReactPaginate
+                                nextLabel=">"
+                                onPageChange={handlePageDepenClick}
+                                pageRangeDisplayed={3}
+                                marginPagesDisplayed={2}
+                                pageCount={Math.ceil(
+                                    totalDepenPosts / itemsPerPage
+                                )}
+                                previousLabel="<"
+                                pageClassName="page-item"
+                                pageLinkClassName="page-link"
+                                previousClassName="page-item"
+                                previousLinkClassName="page-link"
+                                nextClassName="page-item"
+                                nextLinkClassName="page-link"
+                                breakLabel="..."
+                                breakClassName="page-item"
+                                breakLinkClassName="page-link"
+                                containerClassName="pagination"
+                                activeClassName="active"
+                            />
+                        </div>
                     </Card>
                 )}
             </Col>
-            {showScrollButton && (
-                <Button className={cx("scrollToTopBtn")} onClick={scrollToTop}>
-                    <i className="bi bi-layer-forward"></i>
-                </Button>
-            )}
         </Row>
     );
 };

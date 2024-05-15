@@ -105,14 +105,8 @@ const handleGetPost = async (accountNumber) => {
 
 // Function to handle retrieving comments for a specific post with pagination
 // Hàm xử lý lấy bình luận cho một bài viết cụ thể với phân trang kiểu cuộn loading
-const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
+const handleGetComment = async (accountNumber, offset = 0, limit = 5) => {
     try {
-        // Calculates the offset for pagination based on the provided page number and limit.
-        // Tính toán offset cho phân trang dựa trên số trang và limit được cung cấp.
-        const offset = (page - 1) * limit;
-
-        // Fetches the post from the database based on the account number.
-        // Lấy bài viết từ cơ sở dữ liệu dựa trên số tài khoản.
         const post = await db.Post.findOne({
             where: { accountNumber: accountNumber },
             include: [
@@ -131,8 +125,6 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
             ],
         });
 
-        // Returns an error response if no post is found for the given account number.
-        // Trả về response lỗi nếu không tìm thấy bài viết nào cho số tài khoản đã cho.
         if (!post) {
             return {
                 EM: "Không tìm thấy bài viết.",
@@ -141,14 +133,10 @@ const handleGetComment = async (accountNumber, page = 1, limit = 5) => {
             };
         }
 
-        // Counts the total number of comments for the post.
-        // Đếm tổng số bình luận cho bài viết.
         const totalDepenPosts = await db.DepenPost.count({
             where: { postId: post.id },
         });
 
-        // Formats the retrieved comments by extracting relevant properties and handling potential missing user data.
-        // Định dạng các bình luận được truy xuất bằng cách trích xuất các thuộc tính có liên quan và xử lý dữ liệu người dùng bị thiếu (nếu có).
         const formattedDepenPosts = post.DepenPosts
             ? post.DepenPosts.map((depenPost) => ({
                   evidenceLink: depenPost.evidenceLink,

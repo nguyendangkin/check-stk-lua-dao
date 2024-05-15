@@ -65,7 +65,7 @@ export const counterSlice = createSlice({
         builder.addCase(requestGetComment.fulfilled, (state, action) => {
             state.loading = false;
             state.totalDepenPosts = action.payload?.totalComments;
-            state.depenPosts = [...state.depenPosts, ...action.payload?.DT];
+            state.depenPosts = action.payload?.DT;
         });
         builder.addCase(requestGetComment.rejected, (state) => {
             state.loading = false;

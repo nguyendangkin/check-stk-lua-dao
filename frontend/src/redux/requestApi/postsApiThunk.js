@@ -27,10 +27,11 @@ export const requestGetPost = createAsyncThunk(
 // Thunk bất đồng bộ để lấy bình luận cho một bài viết
 export const requestGetComment = createAsyncThunk(
     "usersApiSlice/requestGetComment",
-    async ({ accountNumber, page = 1 }) => {
+    async ({ accountNumber, limit = 5, offset = 0 }) => {
         const response = await axios.post(`/api/v1/get-comment`, {
             accountNumber,
-            page,
+            limit,
+            offset,
         });
         return response.data;
     }

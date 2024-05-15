@@ -39,7 +39,7 @@ function MainHeader() {
     };
 
     return (
-        <Navbar expand="lg" className="bg-body-tertiary">
+        <Navbar expand="lg" id="top-of-page" className="bg-body-tertiary">
             <Container>
                 <Navbar.Brand as={Link} to={"/"}>
                     Check STK Lừa Đảo
