@@ -37,9 +37,9 @@ const Home = () => {
     const [searchKeyword, setSearchKeyword] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
     const [depenPostsPage, setDepenPostsPage] = useState(0);
-    const detailRef = useRef(null);
     const lastDepenPostRef = useRef(null);
     const [accountNumber, setAccountNumber] = useState(null);
+    const [showScroll, setShowScroll] = useState(false);
 
     // Debounce the search keyword to reduce API calls
     // Debounce từ khóa tìm kiếm để giảm số lần gọi API
@@ -110,6 +110,26 @@ const Home = () => {
         setCurrentPage(0); // Reset về trang đầu tiên với t page with new search
     };
 
+    useEffect(() => {
+        const handleScroll = throttle(() => {
+            if (window.scrollY > 300) {
+                setShowScroll(true);
+            } else {
+                setShowScroll(false);
+            }
+        }, 200);
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return (
         <Row>
             <Col xs={12} md={12}>
@@ -176,7 +196,7 @@ const Home = () => {
             </Col>
             <Col xs={12} md={12}>
                 {postInfo && (
-                    <Card ref={detailRef} body className="mt-2">
+                    <Card body className="mt-2">
                         <div className="text-center mb-3">
                             <Card.Title>{postInfo.accountNumber}</Card.Title>
                             <Card.Subtitle>
@@ -255,6 +275,15 @@ const Home = () => {
                     </Card>
                 )}
             </Col>
+            {showScroll && (
+                <Button
+                    variant="primary"
+                    onClick={scrollToTop}
+                    className={cx("scrollToTop")}
+                >
+                    ↑
+                </Button>
+            )}
         </Row>
     );
 };
