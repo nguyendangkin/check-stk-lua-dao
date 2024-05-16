@@ -13,7 +13,6 @@ import ReactPaginate from "react-paginate";
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
 import { resetDepenPosts } from "../../../redux/reducer/postsApiSlice";
-import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
@@ -31,6 +30,7 @@ const Home = () => {
     const totalDepenPosts = useSelector(
         (state) => state.posts?.totalDepenPosts
     );
+    const detailRef = useRef(null);
 
     // State variables for managing UI and data
     // Biến state để quản lý UI và dữ liệu
@@ -60,6 +60,12 @@ const Home = () => {
             );
         }
     }, [depenPostsPage, dispatch]);
+
+    useEffect(() => {
+        if (postInfo) {
+            detailRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [postInfo]);
 
     // Filter posts based on the debounced search keyword
     // Lọc bài đăng dựa trên từ khoá tìm kiếm đã được debounced
@@ -196,7 +202,7 @@ const Home = () => {
             </Col>
             <Col xs={12} md={12}>
                 {postInfo && (
-                    <Card body className="mt-2">
+                    <Card ref={detailRef} body className="mt-2">
                         <div className="text-center mb-3">
                             <Card.Title>{postInfo.accountNumber}</Card.Title>
                             <Card.Subtitle>
