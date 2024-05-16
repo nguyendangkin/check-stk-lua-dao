@@ -61,6 +61,8 @@ const Home = () => {
         }
     }, [depenPostsPage, dispatch]);
 
+    // Scroll to the post details section when postInfo is updated
+    // Cuộn xuống phần chi tiết bài đăng khi postInfo được cập nhật
     useEffect(() => {
         if (postInfo) {
             detailRef.current.scrollIntoView({ behavior: "smooth" });
@@ -104,6 +106,8 @@ const Home = () => {
         setCurrentPage(event.selected);
     };
 
+    // Handle page selection for dependent posts pagination
+    // Xử lý việc chọn trang cho phân trang các bài đăng phụ thuộc
     const handlePageDepenClick = (event) => {
         setDepenPostsPage(event.selected);
     };
@@ -116,6 +120,8 @@ const Home = () => {
         setCurrentPage(0); // Reset về trang đầu tiên với t page with new search
     };
 
+    // Show scroll-to-top button based on scroll position
+    // Hiển thị nút cuộn lên đầu trang dựa trên vị trí cuộn
     useEffect(() => {
         const handleScroll = throttle(() => {
             if (window.scrollY > 300) {
@@ -132,6 +138,8 @@ const Home = () => {
         };
     }, []);
 
+    // Scroll to top function
+    // Hàm cuộn lên đầu trang
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };

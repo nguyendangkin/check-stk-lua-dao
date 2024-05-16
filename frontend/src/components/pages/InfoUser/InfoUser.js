@@ -13,7 +13,6 @@ import {
     Container,
     Row,
     Col,
-    Form,
     Button,
     Modal,
 } from "react-bootstrap";
@@ -27,12 +26,16 @@ const InfoUser = () => {
     const idInfoUser = useSelector((state) => state.posts?.idInfoUser);
     const [showModal, setShowModal] = useState(false);
     const [deleteInfo, setDeleteInfo] = useState({ type: "", id: null });
-
+    const itemsPerPage = 5; // Number of items per page
+    // Handle delete action
+    // Xử lý hành động xóa
     const handleDelete = (type, id) => {
         setDeleteInfo({ type, id });
         setShowModal(true);
     };
 
+    // Handle delete all comments for a post
+    // Xử lý xóa tất cả bình luận cho một bài viết
     const handleDeleteAllComment = (postId) => {
         dispatch(
             requestDeleteAllComment({ idPost: postId, idUser: idInfoUser })
@@ -43,8 +46,8 @@ const InfoUser = () => {
             .catch(() => {});
     };
 
-    const itemsPerPage = 5; // Gi
-
+    // Handle page click for pagination
+    // Xử lý nhấp trang cho phân trang
     const handlePageClick = (data) => {
         const currentPage = data.selected + 1; // `data.selected` là chỉ số trang được chọn, bắt đầu từ 0
         dispatch(
@@ -56,6 +59,8 @@ const InfoUser = () => {
         );
     };
 
+    // Confirm delete action
+    // Xác nhận hành động xóa
     const confirmDelete = () => {
         if (deleteInfo.type === "post") {
             dispatch(
@@ -75,6 +80,8 @@ const InfoUser = () => {
         setShowModal(false);
     };
 
+    // Cancel delete action
+    // Hủy hành động xóa
     const cancelDelete = () => {
         setShowModal(false);
         setDeleteInfo({ type: "", id: null });

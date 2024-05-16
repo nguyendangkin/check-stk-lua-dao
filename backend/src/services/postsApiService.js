@@ -164,6 +164,8 @@ const handleGetComment = async (accountNumber, offset = 0, limit = 5) => {
     }
 };
 
+// Function to get user information with pagination
+// Hàm để lấy thông tin người dùng với phân trang
 const handleGetInfoUser = async (id, page = 1, pageSize = 5) => {
     console.log("Fetching user info", id, page, pageSize);
     const offset = (page - 1) * pageSize;
@@ -227,6 +229,8 @@ const handleGetInfoUser = async (id, page = 1, pageSize = 5) => {
     }
 };
 
+// Function to delete a post
+// Hàm để xóa bài đăng
 const handleDeletePost = async (postId, userId) => {
     const transaction = await db.sequelize.transaction();
     try {
@@ -268,6 +272,8 @@ const handleDeletePost = async (postId, userId) => {
     }
 };
 
+// Function to delete a comment
+// Hàm để xóa bình luận
 const handleDeleteComment = async (idComment) => {
     try {
         await db.DepenPost.destroy({
@@ -288,6 +294,8 @@ const handleDeleteComment = async (idComment) => {
     }
 };
 
+// Function to delete all comments for a specific post and user
+// Hàm để xóa tất cả bình luận cho một bài đăng cụ thể và người dùng
 const handleDeleteAllComment = async (idPost, idUser) => {
     try {
         await db.DepenPost.destroy({

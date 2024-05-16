@@ -97,7 +97,8 @@ const getComment = async (req, res) => {
     }
 };
 
-//
+// Controller to get user information with pagination
+// Controller lấy thông tin người dùng với phân trang
 const getInfoUser = async (req, res) => {
     try {
         const idUser = req.body.idUser;
@@ -120,6 +121,8 @@ const getInfoUser = async (req, res) => {
     }
 };
 
+// Controller to delete a post
+// Controller để xóa bài đăng
 const deletePost = async (req, res) => {
     try {
         const idPost = req.body.idPost;
@@ -140,6 +143,8 @@ const deletePost = async (req, res) => {
     }
 };
 
+// Controller to delete a comment
+// Controller để xóa bình luận
 const deleteComment = async (req, res) => {
     try {
         const idComment = req.body.idComment;
@@ -159,6 +164,8 @@ const deleteComment = async (req, res) => {
     }
 };
 
+// Controller to delete all comments for a post
+// Controller để xóa tất cả bình luận cho một bài đăng
 const deleteAllComment = async (req, res) => {
     try {
         const { idPost, idUser } = req.body; // ĐPost được truyền từ body
