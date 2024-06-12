@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const app = express();
 
-const port = process.env.PORT || 3006;
+const port = process.env.PORT;
 
 // Sử dụng middleware phân tích cookie
 // Use cookie parser middleware

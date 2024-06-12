@@ -1,4 +1,4 @@
-const db = require("./../models/index");
+const db = require("./../models/index.js");
 
 // Hàm xóa các tài khoản chưa xác thực
 // Delete unverified accounts
