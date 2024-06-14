@@ -1,0 +1,52 @@
+1.  Go to root folder run command: docker-compose up -d
+2.  Go to the backend folder run command: docker-compose exec backend bash -c "npx sequelize-cli db:migrate"
+3.  Connect db with DBeaver:
+    Host: localhost
+    Port: 5433
+    Database: chongluadaoreact
+    Username: postgres
+    Password: 12345
+
+4.  In Groups table, create the row:
+    id: 1
+    groupName: admin
+    description: admin
+    createdAt: 2020-01-01 00:00:00.000 +0700
+    updatedAt: 2020-01-01 00:00:00.000 +0700
+
+    id: 2
+    groupName: user
+    description: user
+    createdAt: 2020-01-01 00:00:00.000 +0700
+    updatedAt: 2020-01-01 00:00:00.000 +0700
+
+    id: 3
+    groupName: banner
+    description: banner
+    createdAt: 2020-01-01 00:00:00.000 +0700
+    updatedAt: 2020-01-01 00:00:00.000 +0700
+
+5.  In Roles table, create the row:
+    id: 1
+    roleName: admin
+    permission: {'c','r','u','d'}
+    description: admin
+    createdAt: 2020-01-01 00:00:00.000 +0700
+    updatedAt: 2020-01-01 00:00:00.000 +0700
+
+    id: 2
+    roleName: user
+    permission: {'c','r'}
+    description: admin
+    createdAt: 2020-01-01 00:00:00.000 +0700
+    updatedAt: 2020-01-01 00:00:00.000 +0700
+
+    id: 3
+    roleName: banner
+    permission: {'r'}
+    description: admin
+    createdAt: 2020-01-01 00:00:00.000 +0700
+    updatedAt: 2020-01-01 00:00:00.000 +0700
+
+Note:
+After register user. In table Users, default groupId is 2 (user role). You need to set the user has groupId to 1 (admin role)

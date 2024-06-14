@@ -2,14 +2,18 @@ version: '3'
 
 services:
   frontend:
-    image: nguyenchin0077/check-stk-lua-dao-frontend:latest # Kéo image từ Docker Hub
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     depends_on:
       - backend
 
   backend:
-    image: nguyenchin0077/check-stk-lua-dao-backend:latest # Kéo image từ Docker Hub
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     depends_on:
@@ -18,7 +22,7 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/chongluadaoreact
 
   postgres:
-    image: nguyenchin0077/postgres:lastes
+    image: postgres:16.3
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
