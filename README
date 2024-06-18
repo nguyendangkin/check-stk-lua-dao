@@ -1,3 +1,4 @@
+Node version: v20.12.1
 1.  Go to root folder run command: docker-compose up -d
 2.  Go to the backend folder run command: docker-compose exec backend bash -c "npx sequelize-cli db:migrate"
 3.  Connect db with DBeaver:
