@@ -1,6 +1,4 @@
 
-
-```markdown
 # Hướng Dẫn Cài Đặt và Cấu Hình Dự Án
 
 ## 1. Chạy Docker Compose
