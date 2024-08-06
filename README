@@ -1,53 +1,55 @@
-Node version: v20.12.1
-1.  Go to root folder run command: docker-compose up -d
-2.  Go to the backend folder run command: docker-compose exec backend bash -c "npx sequelize-cli db:migrate"
-3.  Connect db with DBeaver:
-    Host: localhost
-    Port: 5433
-    Database: chongluadaoreact
-    Username: postgres
-    Password: 12345
+1. **Chạy Docker Compose:**
+   - Truy cập vào thư mục gốc của dự án và chạy lệnh: `docker-compose up -d` để khởi động các container Docker.
 
-4.  In Groups table, create the row:
-    id: 1
-    groupName: admin
-    description: admin
-    createdAt: 2020-01-01 00:00:00.000 +0700
-    updatedAt: 2020-01-01 00:00:00.000 +0700
+2. **Thực hiện di trú cơ sở dữ liệu:**
+   - Truy cập vào thư mục `backend` và chạy lệnh: `docker-compose exec backend bash -c "npx sequelize-cli db:migrate"` để thực hiện di trú (migrate) cơ sở dữ liệu bằng Sequelize.
 
-    id: 2
-    groupName: user
-    description: user
-    createdAt: 2020-01-01 00:00:00.000 +0700
-    updatedAt: 2020-01-01 00:00:00.000 +0700
+3. **Kết nối cơ sở dữ liệu với DBeaver:**
+   - Thông tin kết nối:
+     - **Host:** localhost
+     - **Port:** 5433
+     - **Database:** chongluadaoreact
+     - **Username:** postgres
+     - **Password:** 12345
 
-    id: 3
-    groupName: banner
-    description: banner
-    createdAt: 2020-01-01 00:00:00.000 +0700
-    updatedAt: 2020-01-01 00:00:00.000 +0700
+4. **Thêm dữ liệu vào bảng `Groups`:**
+   - Tạo các hàng (row) trong bảng `Groups` với thông tin sau:
+     - **id:** 1
+       - **groupName:** admin
+       - **description:** admin
+       - **createdAt:** 2020-01-01 00:00:00.000 +0700
+       - **updatedAt:** 2020-01-01 00:00:00.000 +0700
+     - **id:** 2
+       - **groupName:** user
+       - **description:** user
+       - **createdAt:** 2020-01-01 00:00:00.000 +0700
+       - **updatedAt:** 2020-01-01 00:00:00.000 +0700
+     - **id:** 3
+       - **groupName:** banner
+       - **description:** banner
+       - **createdAt:** 2020-01-01 00:00:00.000 +0700
+       - **updatedAt:** 2020-01-01 00:00:00.000 +0700
 
-5.  In Roles table, create the row:
-    id: 1
-    roleName: admin
-    permission: {'c','r','u','d'}
-    description: admin
-    createdAt: 2020-01-01 00:00:00.000 +0700
-    updatedAt: 2020-01-01 00:00:00.000 +0700
+5. **Thêm dữ liệu vào bảng `Roles`:**
+   - Tạo các hàng (row) trong bảng `Roles` với thông tin sau:
+     - **id:** 1
+       - **roleName:** admin
+       - **permission:** {'c','r','u','d'}
+       - **description:** admin
+       - **createdAt:** 2020-01-01 00:00:00.000 +0700
+       - **updatedAt:** 2020-01-01 00:00:00.000 +0700
+     - **id:** 2
+       - **roleName:** user
+       - **permission:** {'c','r'}
+       - **description:** user
+       - **createdAt:** 2020-01-01 00:00:00.000 +0700
+       - **updatedAt:** 2020-01-01 00:00:00.000 +0700
+     - **id:** 3
+       - **roleName:** banner
+       - **permission:** {'r'}
+       - **description:** banner
+       - **createdAt:** 2020-01-01 00:00:00.000 +0700
+       - **updatedAt:** 2020-01-01 00:00:00.000 +0700
 
-    id: 2
-    roleName: user
-    permission: {'c','r'}
-    description: admin
-    createdAt: 2020-01-01 00:00:00.000 +0700
-    updatedAt: 2020-01-01 00:00:00.000 +0700
-
-    id: 3
-    roleName: banner
-    permission: {'r'}
-    description: admin
-    createdAt: 2020-01-01 00:00:00.000 +0700
-    updatedAt: 2020-01-01 00:00:00.000 +0700
-
-Note:
-After register user. In table Users, default groupId is 2 (user role). You need to set the user has groupId to 1 (admin role)
+**Lưu ý:**
+- Sau khi đăng ký người dùng, mặc định cột `groupId` trong bảng `Users` sẽ có giá trị là 2 (tức là thuộc nhóm `user`). Bạn cần thay đổi `groupId` của người dùng thành 1 để họ có quyền admin.
