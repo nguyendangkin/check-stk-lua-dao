@@ -44,5 +44,4 @@ Tạo các hàng (row) trong bảng `Roles` với thông tin sau:
 
 ## Lưu ý
 Sau khi đăng ký người dùng, mặc định cột `groupId` trong bảng `Users` sẽ có giá trị là `2` (tức là thuộc nhóm `user`). Bạn cần thay đổi `groupId` của người dùng thành `1` để họ có quyền admin.
-```
 
