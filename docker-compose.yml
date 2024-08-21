@@ -18,7 +18,7 @@ services:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/chongluadaoreact
 
   postgres:
-    image: nguyenchin0077/postgres:lastes
+    image: postgres:13.16 # Kéo image từ Docker 
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
