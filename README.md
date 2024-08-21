@@ -52,11 +52,14 @@ Bạn có thể kết nối cơ sở dữ liệu PostgreSQL với DBeaver để 
 
     - Đường link truy cập frontend: [http://localhost](http://localhost) (hoặc địa chỉ IP của máy chủ nếu bạn sử dụng Docker để chạy ứng dụng)
 
-2. **Cấu trúc Docker:**
-   Dự án sử dụng Docker Compose để quản lý các dịch vụ:
+## Cấu trúc Docker
+
+1. **Dự án sử dụng Docker Compose để quản lý các dịch vụ:**
+
     - Frontend: Được phục vụ bởi Nginx, lắng nghe trên port 80.
     - Backend: Chạy trên Node.js, lắng nghe trên port 3001. - Postgres: Cơ sở dữ liệu PostgreSQL, lắng nghe trên port 5433.
-3. **Môi trường phát triển:**
+
+2. **Môi trường phát triển:**
     - Frontend: Sử dụng Node.js để cài đặt dependencies và build ứng dụng ReactJS. Ứng dụng sau đó được phục vụ bởi Nginx.
     - Backend: Node.js xử lý các yêu cầu API, sử dụng Sequelize để kết nối và quản lý cơ sở dữ liệu PostgreSQL.
 
