@@ -115,12 +115,19 @@ module.exports = {
 
         // Insert sample Posts
         const posts = [];
+        const usedUserIds = new Set();
         for (let i = 1; i <= 10; i++) {
+            let userId;
+            do {
+                userId = Math.floor(Math.random() * 14) + 4;
+            } while (usedUserIds.has(userId)); // Ensure unique userId
+            usedUserIds.add(userId);
+
             posts.push({
                 accountNumber: `${7950323 + i}`,
                 accountName: `MAI LAN MƠ ${i}`,
                 bankName: `VIETCOMBANK ${i}`,
-                userId: Math.floor(Math.random() * 14) + 4, // Assign to random regular user
+                userId: userId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
@@ -129,10 +136,19 @@ module.exports = {
 
         // Insert sample UserPosts
         const userPosts = [];
+        const usedUserPostPairs = new Set();
         for (let i = 1; i <= 20; i++) {
+            let userId, postId, userPostPair;
+            do {
+                userId = Math.floor(Math.random() * 17) + 1; // Random user
+                postId = Math.floor(Math.random() * 10) + 1; // Random post
+                userPostPair = `${userId}-${postId}`;
+            } while (usedUserPostPairs.has(userPostPair)); // Ensure unique user-post pair
+            usedUserPostPairs.add(userPostPair);
+
             userPosts.push({
-                userId: Math.floor(Math.random() * 17) + 1, // Random user
-                postId: Math.floor(Math.random() * 10) + 1, // Random post
+                userId: userId,
+                postId: postId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
@@ -141,12 +157,21 @@ module.exports = {
 
         // Insert sample DepenPosts
         const depenPosts = [];
+        const usedDepenPostPairs = new Set();
         for (let i = 1; i <= 5; i++) {
+            let userId, postId, depenPostPair;
+            do {
+                userId = Math.floor(Math.random() * 14) + 4;
+                postId = i;
+                depenPostPair = `${userId}-${postId}`;
+            } while (usedDepenPostPairs.has(depenPostPair)); // Ensure unique user-post pair for DepenPosts
+            usedDepenPostPairs.add(depenPostPair);
+
             depenPosts.push({
                 evidenceLink: `https://www.facebook.com/permalink.php?story_fbid=pfbid02mq3oFBgFGpeRGYXfCfh8QtJH2A75jeHoJvyHMN5WmvEzhQm6uSmkw2sEh2NGtDZgl&id=100084644706267${i}`,
                 advice: `Người này hay bảo cọc tiền rồi bùng đi đâu mất! Mọi người nên cẩn thận ${i}`,
-                userId: Math.floor(Math.random() * 14) + 4, // Assign to random regular user
-                postId: i,
+                userId: userId,
+                postId: postId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
