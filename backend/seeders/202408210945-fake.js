@@ -10,21 +10,21 @@ module.exports = {
                 {
                     id: 1,
                     groupName: "admin",
-                    description: "Administrators",
+                    description: "Quản trị viên",
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 },
                 {
                     id: 2,
                     groupName: "user",
-                    description: "Regular users",
+                    description: "Người dùng phổ thông",
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 },
                 {
                     id: 3,
-                    groupName: "banned",
-                    description: "Banned users",
+                    groupName: "banner",
+                    description: "Người dùng bị BAN tài khoản",
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 },
@@ -40,7 +40,7 @@ module.exports = {
                     id: 1,
                     roleName: "admin",
                     permission: ["c", "r", "u", "d"],
-                    description: "Full access",
+                    description: "Có đầy đủ 4 quyền",
                     groupId: 1,
                     createdAt: new Date(),
                     updatedAt: new Date(),
@@ -49,16 +49,16 @@ module.exports = {
                     id: 2,
                     roleName: "user",
                     permission: ["c", "r"],
-                    description: "Limited access",
+                    description: "Giới hạn quyền, chỉ có 2 quyền cơ bản",
                     groupId: 2,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 },
                 {
                     id: 3,
-                    roleName: "banned",
+                    roleName: "banner",
                     permission: ["r"],
-                    description: "Read-only access",
+                    description: "Chỉ có quyền đọc",
                     groupId: 3,
                     createdAt: new Date(),
                     updatedAt: new Date(),
@@ -69,12 +69,12 @@ module.exports = {
 
         // Insert Users
         const users = [];
-        const hashedPassword = await bcrypt.hash("password123", 10);
+        const hashedPassword = await bcrypt.hash("matkhau123", 10);
 
         // Admin user
         users.push({
-            email: "admin@example.com",
-            fullName: "Admin User",
+            email: "admin@gmail.com",
+            fullName: "NGUYỄN NHẬT ANH",
             password: hashedPassword,
             isVerified: true,
             isBanned: false,
@@ -86,8 +86,8 @@ module.exports = {
         // 2 banned users
         for (let i = 1; i <= 2; i++) {
             users.push({
-                email: `banned${i}@example.com`,
-                fullName: `Banned User ${i}`,
+                email: `banned${i}@gmail.com`,
+                fullName: `TRẦN TUẤN TÚ ${i}`,
                 password: hashedPassword,
                 isVerified: true,
                 isBanned: true,
@@ -100,8 +100,8 @@ module.exports = {
         // 14 regular users
         for (let i = 1; i <= 14; i++) {
             users.push({
-                email: `user${i}@example.com`,
-                fullName: `Regular User ${i}`,
+                email: `user${i}@gmail.com`,
+                fullName: `HUỲNH LỆ DIỆU ÁI ${i}`,
                 password: hashedPassword,
                 isVerified: true,
                 isBanned: false,
@@ -117,9 +117,9 @@ module.exports = {
         const posts = [];
         for (let i = 1; i <= 10; i++) {
             posts.push({
-                accountNumber: `ACC${100000 + i}`,
-                accountName: `Account ${i}`,
-                bankName: `Bank ${i}`,
+                accountNumber: `${7950323 + i}`,
+                accountName: `MAI LAN MƠ ${i}`,
+                bankName: `VIETCOMBANK ${i}`,
                 userId: Math.floor(Math.random() * 14) + 4, // Assign to random regular user
                 createdAt: new Date(),
                 updatedAt: new Date(),
@@ -143,8 +143,8 @@ module.exports = {
         const depenPosts = [];
         for (let i = 1; i <= 5; i++) {
             depenPosts.push({
-                evidenceLink: `https://example.com/evidence${i}`,
-                advice: `Advice for post ${i}`,
+                evidenceLink: `https://www.facebook.com/permalink.php?story_fbid=pfbid02mq3oFBgFGpeRGYXfCfh8QtJH2A75jeHoJvyHMN5WmvEzhQm6uSmkw2sEh2NGtDZgl&id=100084644706267${i}`,
+                advice: `Người này hay bảo cọc tiền rồi bùng đi đâu mất! Mọi người nên cẩn thận ${i}`,
                 userId: Math.floor(Math.random() * 14) + 4, // Assign to random regular user
                 postId: i,
                 createdAt: new Date(),
