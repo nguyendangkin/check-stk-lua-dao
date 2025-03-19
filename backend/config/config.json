@@ -8,23 +8,19 @@
         "dialect": "postgres"
     },
     "test": {
-        "username": "root",
-        "password": null,
-        "database": "database_test",
-        "host": "127.0.0.1",
-        "dialect": "mysql",
-        "define": {
-            "freezeTableName": true
-        }
+        "username": "admin_chongluadaoreact",
+        "port": "5432",
+        "password": "rNjTuNMOl4lo0zs8btR2kxJNPSWMIt1g",
+        "database": "chongluadaoreact_6ek8",
+        "host": "dpg-cvd5a6jv2p9s73cbjag0-a.singapore-postgres.render.com",
+        "dialect": "postgres"
     },
     "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
-        "host": "127.0.0.1",
-        "dialect": "mysql",
-        "define": {
-            "freezeTableName": true
-        }
+        "username": "admin_chongluadaoreact",
+        "port": "5432",
+        "password": "rNjTuNMOl4lo0zs8btR2kxJNPSWMIt1g",
+        "database": "chongluadaoreact_6ek8",
+        "host": "dpg-cvd5a6jv2p9s73cbjag0-a.singapore-postgres.render.com",
+        "dialect": "postgres"
     }
 }
