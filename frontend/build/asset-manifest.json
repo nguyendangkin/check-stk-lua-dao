@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f42cb885.css",
+    "main.js": "/static/js/main.994bdea4.js",
+    "static/media/MPLUS1Code-VariableFont_wght.ttf": "/static/media/MPLUS1Code-VariableFont_wght.7b3efe40b2ae68ad862f.ttf",
+    "static/media/MPLUS1Code-Medium.ttf": "/static/media/MPLUS1Code-Medium.044b9c530981bd8a2793.ttf",
+    "static/media/MPLUS1Code-Bold.ttf": "/static/media/MPLUS1Code-Bold.6a7e5443a67c758cba7b.ttf",
+    "static/media/MPLUS1Code-SemiBold.ttf": "/static/media/MPLUS1Code-SemiBold.e43ee8933b23c50ff502.ttf",
+    "static/media/MPLUS1Code-Regular.ttf": "/static/media/MPLUS1Code-Regular.2b6bcb27ef68290c4b77.ttf",
+    "static/media/MPLUS1Code-Thin.ttf": "/static/media/MPLUS1Code-Thin.b4d09413eaa60d4398b4.ttf",
+    "static/media/MPLUS1Code-ExtraLight.ttf": "/static/media/MPLUS1Code-ExtraLight.668de0a2f72826167d3e.ttf",
+    "static/media/MPLUS1Code-Light.ttf": "/static/media/MPLUS1Code-Light.e4ea39f6fa50939701c8.ttf",
+    "static/media/bootstrap-icons.woff?": "/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/bootstrap-icons.woff2?": "/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
+    "static/media/user.png": "/static/media/user.10691648d79aa2f92514.png",
+    "index.html": "/index.html",
+    "main.f42cb885.css.map": "/static/css/main.f42cb885.css.map",
+    "main.994bdea4.js.map": "/static/js/main.994bdea4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f42cb885.css",
+    "static/js/main.994bdea4.js"
+  ]
+}
