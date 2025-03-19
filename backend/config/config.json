@@ -5,7 +5,13 @@
         "password": "rNjTuNMOl4lo0zs8btR2kxJNPSWMIt1g",
         "database": "chongluadaoreact_6ek8",
         "host": "dpg-cvd5a6jv2p9s73cbjag0-a.singapore-postgres.render.com",
-        "dialect": "postgres"
+        "dialect": "postgres",
+        "dialectOptions": {
+            "ssl": {
+                "require": true,
+                "rejectUnauthorized": false
+            }
+        }
     },
     "test": {
         "username": "admin_chongluadaoreact",
@@ -13,7 +19,13 @@
         "password": "rNjTuNMOl4lo0zs8btR2kxJNPSWMIt1g",
         "database": "chongluadaoreact_6ek8",
         "host": "dpg-cvd5a6jv2p9s73cbjag0-a.singapore-postgres.render.com",
-        "dialect": "postgres"
+        "dialect": "postgres",
+        "dialectOptions": {
+            "ssl": {
+                "require": true,
+                "rejectUnauthorized": false
+            }
+        }
     },
     "production": {
         "username": "admin_chongluadaoreact",
@@ -21,6 +33,12 @@
         "password": "rNjTuNMOl4lo0zs8btR2kxJNPSWMIt1g",
         "database": "chongluadaoreact_6ek8",
         "host": "dpg-cvd5a6jv2p9s73cbjag0-a.singapore-postgres.render.com",
-        "dialect": "postgres"
+        "dialect": "postgres",
+        "dialectOptions": {
+            "ssl": {
+                "require": true,
+                "rejectUnauthorized": false
+            }
+        }
     }
 }
